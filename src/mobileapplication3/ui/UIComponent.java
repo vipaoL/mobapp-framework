@@ -272,6 +272,31 @@ public abstract class UIComponent implements IUIComponent {
         }
     }
     
+    public Graphics getUGraphics() {
+    	if (parent != null) {
+            return parent.getUGraphics();
+        } else {
+            try {
+                throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+    }
+    
+    public void flushGraphics() {
+    	if (parent != null) {
+            parent.flushGraphics();
+        } else {
+            try {
+                throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
     public boolean pointerReleased(int x, int y) {
         if (!(isVisible && checkTouchEvent(x, y))) {
             return false;
@@ -300,11 +325,22 @@ public abstract class UIComponent implements IUIComponent {
         return handleKeyPressed(keyCode, count);
     }
     
+    public boolean keyReleased(int keyCode, int count) {
+    	if (!isActive || !isVisible) {
+            return false;
+        }
+        return handleKeyReleased(keyCode, count);
+    }
+    
     public boolean keyRepeated(int keyCode, int pressedCount) {
         if (!isActive || !isVisible) {
             return false;
         }
         return handleKeyRepeated(keyCode, pressedCount);
+    }
+    
+    protected boolean handleKeyReleased(int keyCode, int pressedCount) {
+        return false;
     }
 
     protected boolean handleKeyRepeated(int keyCode, int pressedCount) {

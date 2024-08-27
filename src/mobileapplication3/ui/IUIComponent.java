@@ -49,6 +49,7 @@ public interface IUIComponent {
     public boolean pointerDragged(int x, int y);
     public boolean pointerPressed(int x, int y);
     public boolean keyPressed(int keyCode, int count);
+    public boolean keyReleased(int keyCode, int count);
     public boolean keyRepeated(int keyCode, int pressedCount);
     public void onShow();
     public void onHide();

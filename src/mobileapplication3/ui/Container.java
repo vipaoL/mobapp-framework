@@ -493,6 +493,37 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         return false;
     }
+    
+    public boolean keyReleased(int keyCode, int count) {
+        if (!isActive || !isVisible) {
+            return false;
+        }
+        
+        if (popupWindow != null) {
+            popupWindow.keyReleased(keyCode, count);
+            repaint();
+            return true;
+        }
+        
+        IUIComponent[] uiComponents = getComponents();
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i] == null) {
+                    continue;
+                }
+                if (uiComponents[i].keyReleased(keyCode, count)) {
+                	if (isVisible) {
+                		repaint();
+                	}
+                    return true;
+                }
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
 
     public boolean keyRepeated(int keyCode, int pressedCount) {
         if (!isActive || !isVisible) {
@@ -628,6 +659,31 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         } else {
             try {
                 throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public Graphics getUGraphics() {
+    	if (parent != null) {
+            return parent.getUGraphics();
+        } else {
+            try {
+                throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+    }
+    
+    public void flushGraphics() {
+    	if (parent != null) {
+            parent.flushGraphics();
+        } else {
+            try {
+                throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
             }
