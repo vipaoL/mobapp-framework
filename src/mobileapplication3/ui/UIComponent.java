@@ -117,7 +117,12 @@ public abstract class UIComponent implements IUIComponent {
     public boolean getIsVisible() {
         return isVisible;
     }
-    
+
+    @Override
+    public boolean repaintOnlyOnFlushGraphics() {
+        return false;
+    }
+
     public boolean toggleIsVisible() {
         setVisible(!isVisible);
         return isVisible;

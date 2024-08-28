@@ -40,6 +40,7 @@ public interface IUIComponent {
     public IUIComponent setPadding(int padding);
     public IUIComponent roundBg(boolean b);
     public boolean getIsVisible();
+    public boolean repaintOnlyOnFlushGraphics();
     public void paint(Graphics g);
     public void paint(Graphics g, int x0, int y0, int w, int h);
     public void paint(Graphics g, boolean forceInactive);

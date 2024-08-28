@@ -31,6 +31,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     protected Image bg = null;
     private IUIComponent popupWindow = null;
     protected IContainer parent = null;
+    protected boolean repaintOnlyOnFlushGraphics = false;
     
     public Container() {
         components = new IUIComponent[0];
@@ -335,6 +336,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     
     public boolean getIsVisible() {
         return isVisible;
+    }
+
+    @Override
+    public boolean repaintOnlyOnFlushGraphics() {
+        return repaintOnlyOnFlushGraphics;
     }
 
     public boolean checkTouchEvent(int x, int y) {
