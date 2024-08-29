@@ -72,40 +72,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     
     public Image getBlurredCapture() {
     	Image img = getCapture();
-        blurImg(img);
+        if (img != null) {
+            img.blur();
+        }
         return img;
-    }
-    
-    protected void blurImg(Image img) {
-    	try {
-	        Graphics g = img.getGraphics();
-	        int x0 = 0, y0 = 0;
-	        int w = img.getWidth();
-	        int h = img.getHeight();
-	        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-	        int a = 3;
-	        int offset = new Random().nextInt(a);
-	        x0 += offset;
-	        for (int i = -offset; i < (w + h) / a; i++) {
-	            g.setColor(0x110033);
-	            g.drawLine(x1 + x0, y1 + y0, x2 + x0, y2 + y0);
-	            g.drawLine(x1 + x0, h - (y1 + y0), x2 + x0, h - (y2 + y0));
-	            
-	            if (y1 < h) {
-	                y1 += a;
-	            } else {
-	                x1 += a;
-	            }
-	            
-	            if (x2 < w) {
-	                x2 += a;
-	            } else {
-	                y2 += a;
-	            }
-	        }
-    	} catch (Exception ex) {
-    		ex.printStackTrace();
-    	}
     }
 
     protected final Container setComponents(IUIComponent[] components) {
