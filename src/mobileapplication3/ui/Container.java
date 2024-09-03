@@ -308,7 +308,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return isVisible;
     }
 
-    @Override
     public boolean repaintOnlyOnFlushGraphics() {
         return repaintOnlyOnFlushGraphics;
     }

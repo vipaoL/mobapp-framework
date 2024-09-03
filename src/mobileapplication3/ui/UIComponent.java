@@ -118,7 +118,6 @@ public abstract class UIComponent implements IUIComponent {
         return isVisible;
     }
 
-    @Override
     public boolean repaintOnlyOnFlushGraphics() {
         return false;
     }
