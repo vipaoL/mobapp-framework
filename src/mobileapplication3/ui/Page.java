@@ -25,8 +25,6 @@ public abstract class Page extends Container {
         		return false;
         	}
         };
-                //.setButtonsBgColor(0x3333aa)
-                //.setSelectedColor(0x9999ff);
     }
     
     public void init() {
@@ -54,7 +52,7 @@ public abstract class Page extends Container {
             }
         }
         
-        margin = w / 32;
+        margin = h / 32;
         
         title
                 .setSize(w, TextComponent.HEIGHT_AUTO)
