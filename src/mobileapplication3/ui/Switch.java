@@ -8,20 +8,24 @@ public abstract class Switch extends Button {
 	int padding;
 	private int switchW;
 	int switchX0;
+	protected boolean showKbHints;
 
 	public Switch(String title) {
 		super(title);
 		value = getValue();
 	}
 	
-	protected void drawText(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
-		switchW = Math.min(h * 2, w / 4);
+	protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
+		int switchFreeSpace = w / 4;
+		int switchCenterX = x0 + w * 7 / 8;
+		int switchH = Math.min(switchFreeSpace / 2, h * 2 / 3);
+		switchW = Math.min(switchFreeSpace, switchH * 3);
+		
 		padding = switchW / 8;
-		super.drawText(g, x0, y0, w - switchW, h, isSelected, isFocused, drawAsInactive);
-		switchX0 = x0 + w - switchW + padding;
+		super.drawText(g, text, x0, y0, switchCenterX - switchW / 2 - x0, h, isSelected, isFocused, forceInactive, showKbHints);
+		
+		switchX0 = switchCenterX - switchW / 2 + padding;
 		switchW -= padding * 2;
-		int switchH = switchW / 2;
-		int roundingD = switchH;
 		int switchY0 = y0 + (h - switchH) / 2;
 		
 		if (isActive()) {
@@ -34,7 +38,7 @@ public abstract class Switch extends Button {
 			g.setColor(bgColorInactive);
 		}
 		
-		g.fillRoundRect(switchX0, switchY0, switchW, switchH, roundingD, roundingD);
+		g.fillRoundRect(switchX0, switchY0, switchW, switchH, switchW / 2, switchH);
 		
 		if (isActive()) {
 			g.setColor(fontColor);
