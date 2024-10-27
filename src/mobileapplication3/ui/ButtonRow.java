@@ -25,6 +25,10 @@ public class ButtonRow extends AbstractButtonSet {
         this.buttons = buttons;
     }
     
+    public ButtonRow bindToSoftButtons() {
+    	return bindToSoftButtons(0, buttons.length - 1);
+    }
+    
     public ButtonRow bindToSoftButtons(int leftSoftBindIndex, int rightSoftBindIndex) {
         this.leftSoftBindIndex = leftSoftBindIndex;
         this.rightSoftBindIndex = rightSoftBindIndex;
@@ -53,7 +57,7 @@ public class ButtonRow extends AbstractButtonSet {
         }
     }
 
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (buttons.length == 0) {
             return false;
         }
@@ -73,31 +77,33 @@ public class ButtonRow extends AbstractButtonSet {
         
         return buttons[i].invokePressed(wasSelected, isFocused);
     }
+    
+    protected boolean handleBindsOnKeyPressed(int keyCode) {
+    	switch (keyCode) {
+        case KEYCODE_LEFT_SOFT:
+            if (leftSoftBindIndex != NOT_SET) {
+                return buttons[leftSoftBindIndex].invokePressed(selected == leftSoftBindIndex, isFocused);
+            }
+        case KEYCODE_RIGHT_SOFT:
+            if (rightSoftBindIndex != NOT_SET) {
+                return buttons[rightSoftBindIndex].invokePressed(selected == rightSoftBindIndex, isFocused);
+            }
+    	}
+    	return super.handleBindsOnKeyPressed(keyCode);
+    }
 
-    public boolean handleKeyPressed(int keyCode, int count) {
+    public boolean onKeyPressed(int keyCode, int count) {
         if (!isVisible) {
             return false;
         }
         
         //setIsSelectionEnabled(true);
         switch (keyCode) {
-            case KEYCODE_LEFT_SOFT:
-                if (leftSoftBindIndex != NOT_SET) {
-                    return buttons[leftSoftBindIndex].invokePressed(selected == leftSoftBindIndex, isFocused);
-                } else {
-                	return false;
-                }
-            case KEYCODE_RIGHT_SOFT:
-                if (rightSoftBindIndex != NOT_SET) {
-                    return buttons[rightSoftBindIndex].invokePressed(selected == rightSoftBindIndex, isFocused);
-                } else {
-                	return false;
-                }
             default:
             	if (!isSelectionEnabled) {
             		return false;
             	}
-                switch (RootContainer.getGameActionn(keyCode)) {
+                switch (RootContainer.getAction(keyCode)) {
                     case Keys.LEFT:
                     	if (selected > 0) {
                             setSelected(selected-1);
@@ -145,7 +151,7 @@ public class ButtonRow extends AbstractButtonSet {
 
         for (int i = 0; i < buttons.length; i++) {
             boolean drawAsSelected = (i == selected && isSelectionVisible && isSelectionEnabled);
-            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused, forceInactive);
+            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused, forceInactive, showKbHints);
         }
     }
 
