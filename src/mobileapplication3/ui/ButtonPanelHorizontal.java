@@ -88,13 +88,13 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         }
     }
 
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (!checkTouchEvent(x, y)) {
             return false;
         }
         
         for (int i = 0; i < buttonRows.length; i++) {
-            if (buttonRows[i].handlePointerReleased(x, y)) {
+            if (buttonRows[i].handlePointerClicked(x, y)) {
                 return true;
             }
         }
@@ -102,7 +102,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         return false;
     }
 
-    public boolean handleKeyPressed(int keyCode, int count) {
+    public boolean onKeyPressed(int keyCode, int count) {
         if (keyCode >= 49 && keyCode <= 57) {
             int i = keyCode - 49;
             
@@ -121,7 +121,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         setIsSelectionVisible(true);
         switch (keyCode) {
             default:
-                switch (RootContainer.getGameActionn(keyCode)) {
+                switch (RootContainer.getAction(keyCode)) {
                     case Keys.LEFT:
                         if (selected > 0) {
                             selected--;

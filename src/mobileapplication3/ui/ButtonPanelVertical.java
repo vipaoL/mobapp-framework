@@ -46,13 +46,13 @@ public class ButtonPanelVertical extends UIComponent {
         }
     }
 
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (!checkTouchEvent(x, y)) {
             return false;
         }
         
         for (int i = 0; i < buttonCols.length; i++) {
-            if (buttonCols[i].handlePointerReleased(x, y)) {
+            if (buttonCols[i].handlePointerClicked(x, y)) {
                 return true;
             }
         }
