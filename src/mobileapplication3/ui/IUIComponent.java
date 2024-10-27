@@ -12,7 +12,7 @@ import mobileapplication3.platform.ui.Graphics;
  * @author vipaol
  */
 public interface IUIComponent {
-    public static final int 
+    public static final int
             TOP = Graphics.TOP,
             BOTTOM = Graphics.BOTTOM,
             LEFT = Graphics.LEFT,
@@ -25,11 +25,14 @@ public interface IUIComponent {
             KEYCODE_RIGHT_SOFT = -7,
             COLOR_ACCENT = 0x000055,
             COLOR_ACCENT_MUTED = 0x101020,
-    		BG_COLOR_INACTIVE = 0x202025,
-			FONT_COLOR_INACTIVE = 0x404040,
-			FONT_COLOR = 0xffffff;
-    
-    
+            BG_COLOR_INACTIVE = 0x202025,
+            BG_COLOR_WARN = 0x222200,
+            BG_COLOR_DANGER = 0x550000,
+            BG_COLOR_SELECTED = 0x003375,
+            BG_COLOR_HIGHLIGHTED = 0x151535,
+            FONT_COLOR_INACTIVE = 0x404040,
+            FONT_COLOR = 0xffffff;
+
     public IUIComponent setParent(IContainer parent);
     public IUIComponent setPos(int x0, int y0, int anchor);
     public IUIComponent setSize(int w, int h);
@@ -46,6 +49,7 @@ public interface IUIComponent {
     public void paint(Graphics g, boolean forceInactive);
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
     public boolean canBeFocused();
+    public boolean pointerClicked(int x, int y);
     public boolean pointerReleased(int x, int y);
     public boolean pointerDragged(int x, int y);
     public boolean pointerPressed(int x, int y);
@@ -54,6 +58,6 @@ public interface IUIComponent {
     public boolean keyRepeated(int keyCode, int pressedCount);
     public void onShow();
     public void onHide();
-	public boolean checkTouchEvent(int x, int y);
-	public void init();
+    public boolean checkTouchEvent(int x, int y);
+    public void init();
 }
