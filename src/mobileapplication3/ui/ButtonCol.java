@@ -5,6 +5,7 @@
  */
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Mathh;
 import mobileapplication3.platform.Utils;
 import mobileapplication3.platform.ui.Font;
 import mobileapplication3.platform.ui.Graphics;
@@ -19,33 +20,40 @@ public class ButtonCol extends AbstractButtonSet {
     private AnimationThread animationThread = null;
     private int btnH = H_AUTO;
     
-    private boolean isScrollable = false;
-    private boolean trimHeight = false;
-    private int hUntilTrim, prevTotalBtnsH;
+    private boolean isScrollable = true;
+    private boolean trimHeight = true;
+    private int hBeforeTrim, btnHBeforeAuto = btnH, prevTotalBtnsH;
     private int scrollOffset = 0;
     private int pointerPressedY, scrollOffsetWhenPressed;
-    private boolean startFromBottom;
-    private boolean enableAnimations = true;
+    protected int lastDraggedY, lastDraggedDY, draggedAvgDY;
+    protected long lastDraggedT;
+    protected int lastDraggedDT, draggedAvgDT;
+    private boolean startFromBottom = false;
+    private boolean kbSmoothScrolling = true, kineticTouchScrolling = true;
     
-    public ButtonCol() { }
+    public ButtonCol() {
+    	setIsSelectionEnabled(true);
+    }
 
     public ButtonCol(Button[] buttons) {
+    	this();
         this.buttons = buttons;
     }
     
     public void init() {
     	try {
-    		enableAnimations = getUISettings().getAnimsEnabled();
+    		kbSmoothScrolling = getUISettings().getKbSmoothScrollingEnabled();
+    		kineticTouchScrolling = getUISettings().getKineticTouchScrollingEnabled();
     	} catch (Exception ex) { }
     	super.init();
     }
 
     public void recalcSize() {
-        setSizes(w, hUntilTrim, btnH, trimHeight);
+        setSizes(w, hBeforeTrim, btnHBeforeAuto, trimHeight);
     }
 
     public IUIComponent setSize(int w, int h) {
-        return setSizes(w, h, btnH);
+        return setSizes(w, h, btnHBeforeAuto);
     }
     
     public IUIComponent setSizes(int w, int h, int btnH) {
@@ -64,8 +72,9 @@ public class ButtonCol extends AbstractButtonSet {
         
         int prevH = this.h;
         super.setSize(w, h);
+        this.hBeforeTrim = this.h;
+        this.btnHBeforeAuto = btnH;
         this.btnH = btnH;
-        this.hUntilTrim = this.h;
         this.trimHeight = trimHeight;
         
         if (buttons == null) {
@@ -77,10 +86,11 @@ public class ButtonCol extends AbstractButtonSet {
         }
         
         if (this.btnH == H_AUTO) {
-            if (this.h == H_AUTO || this.trimHeight) {
-                this.btnH = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding*2;
-            } else {
-                this.btnH = this.h / buttons.length;
+        	this.btnH = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding*2;
+            if (this.h != H_AUTO && !this.trimHeight) {
+                if (buttons.length > 0) {
+                    this.btnH = Math.max(this.btnH, this.h / buttons.length);
+                }
             }
         } else {
             this.h = Math.min(this.h, this.btnH * buttons.length);
@@ -133,7 +143,7 @@ public class ButtonCol extends AbstractButtonSet {
         return buttons.length * getBtnH();
     }
     
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (!isVisible) {
             return false;
         }
@@ -146,13 +156,42 @@ public class ButtonCol extends AbstractButtonSet {
             return false;
         }
         
-        boolean wasSelected = (selected == prevSelected && isSelectionEnabled);
         prevSelected = selected;
+        x -= x0;
+        y -= y0 - scrollOffset;
+        setSelected(y / btnH);
+        boolean wasSelected = (selected == prevSelected && isSelectionEnabled);
         
         return buttons[selected].invokePressed(wasSelected, isFocused);
     }
     
+    protected boolean handlePointerReleased(int x, int y) {
+    	int startY = scrollOffset;
+        int targetY = scrollOffset;
+
+        int dY;
+        if (draggedAvgDT > 0) {
+            dY = draggedAvgDY * draggedAvgDY * 350 / draggedAvgDT / draggedAvgDT;
+        } else {
+            dY = 0;
+        }
+
+        targetY -= dY * Mathh.sign(draggedAvgDY);
+        int topLimitY = 0;
+        int bottomLimitY = getTotalBtnsH() - h;
+
+        if (kineticTouchScrolling && targetY != startY) {
+            initAnimationThread();
+            int t = Math.min(2000, Math.abs(2 * dY * draggedAvgDT / draggedAvgDY));
+            animationThread.animate(0, startY, 0, targetY, t, 0, 0, topLimitY, bottomLimitY, draggedAvgDT);
+        }
+        
+        return true;
+    }
+    
     public boolean handlePointerPressed(int x, int y) {
+    	stopAnimation();
+
         if (!isVisible) {
             return false;
         }
@@ -160,11 +199,7 @@ public class ButtonCol extends AbstractButtonSet {
         if (buttons == null || buttons.length == 0) {
             return false;
         }
-        
-        if (!isScrollable) {
-            return false;
-        }
-        
+
         if (btnH*buttons.length <= h) {
             //return false;
         }
@@ -176,15 +211,12 @@ public class ButtonCol extends AbstractButtonSet {
         
         pointerPressedY = y;
         scrollOffsetWhenPressed = scrollOffset;
-        
-        x -= x0;
-        y -= y0 - scrollOffset;
-        setSelected(y / btnH);
-        
-        if (isSelectionEnabled) {
-            isSelectionVisible = true;
-        }
-        
+
+        lastDraggedY = y;
+        lastDraggedT = System.currentTimeMillis();
+        draggedAvgDY = 0;
+        draggedAvgDT = 0;
+
         return true;
     }
     
@@ -208,11 +240,29 @@ public class ButtonCol extends AbstractButtonSet {
         scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
         
         scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - h));
-        
+
+        lastDraggedDY = y - lastDraggedY;
+        lastDraggedY = y;
+
+        lastDraggedDT = (int) (System.currentTimeMillis() - lastDraggedT);
+        lastDraggedT = System.currentTimeMillis();
+
+        if (draggedAvgDY == 0) {
+            draggedAvgDY = lastDraggedDY;
+        } else {
+            draggedAvgDY = (2 * draggedAvgDY + 2 * lastDraggedDY + 1) / 4;
+        }
+
+        if (draggedAvgDT == 0) {
+            draggedAvgDT = lastDraggedDT;
+        } else {
+            draggedAvgDT = (2 * draggedAvgDT + 2 * lastDraggedDT + 1) / 4;
+        }
+
         return true;
     }
 
-    public boolean handleKeyPressed(int keyCode, int count) {
+    public boolean onKeyPressed(int keyCode, int count) {
         if (!isVisible) {
             return false;
         }
@@ -225,47 +275,51 @@ public class ButtonCol extends AbstractButtonSet {
             return false;
         }
         
-        switch (keyCode) {
-            default:
-                switch (RootContainer.getGameActionn(keyCode)) {
-                    case Keys.UP:
-                        if (selected > 0) {
-                            setSelected(selected-1);
-                        } else {
-                        	setSelected(buttons.length - 1);
-                        }
-                        break;
-                    case Keys.DOWN:
-                        if (selected < buttons.length - 1) {
-                        	setSelected(selected+1);
-                        } else {
-                        	setSelected(0);
-                        }
-                        break;
-                    case Keys.FIRE:
-                        if (isSelectionEnabled) {
-                            isSelectionVisible = true;
-                        }
-                        return buttons[selected].invokePressed(true, isFocused);
-                    default:
-                        return isFocused;
-                }
-        }
+        boolean ret = false;
+        
+        int action = RootContainer.getAction(keyCode);
+        do {
+	        switch (action) {
+	            case Keys.UP:
+	                if (selected > 0) {
+	                    setSelected(selected-1);
+	                } else {
+	                	setSelected(buttons.length - 1);
+	                }
+	                ret = true;
+	                break;
+	            case Keys.DOWN:
+	                if (selected < buttons.length - 1) {
+	                	setSelected(selected+1);
+	                } else {
+	                	setSelected(0);
+	                }
+	                ret = true;
+	                break;
+	            case Keys.FIRE:
+	                if (isSelectionEnabled) {
+	                    isSelectionVisible = true;
+	                }
+	                return buttons[selected].invokePressed(true, isFocused);
+	        }
+        } while (buttons[selected] instanceof ButtonStub && action != Keys.FIRE);
         
         int selectedH = btnH * selected;
         int startY = scrollOffset;
         int targetY = scrollOffset;
+        int topLimitY = 0;
+        int bottomLimitY = btnH * buttons.length - h;
         if (selectedH - btnH < scrollOffset) {
-            targetY = Math.max(0, selectedH - btnH * 3 / 4);
+            targetY = Math.max(topLimitY, selectedH - btnH * 3 / 4);
         }
         
         if (selectedH + btnH > scrollOffset + h) {
-            targetY = Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4);
+            targetY = Math.min(bottomLimitY, selectedH - h + btnH + btnH * 3 / 4);
         }
         
-        if (enableAnimations && targetY != startY) {
+        if (kbSmoothScrolling && targetY != startY) {
             initAnimationThread();
-            animationThread.animate(0, startY, 0, targetY, 200);
+            animationThread.animate(0, startY, 0, targetY, 200, 0, 0, topLimitY, bottomLimitY);
         } else {
             scrollOffset = targetY;
         }
@@ -274,7 +328,7 @@ public class ButtonCol extends AbstractButtonSet {
             isSelectionVisible = true;
         }
         
-        return true;
+        return ret;
     }
     
     public ButtonCol enableScrolling(boolean isScrollable, boolean startFromBottom) {
@@ -289,7 +343,7 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     public ButtonCol enableAnimations(boolean b) {
-        enableAnimations = b;
+        kbSmoothScrolling = b;
         return this;
     }
 
@@ -338,15 +392,15 @@ public class ButtonCol extends AbstractButtonSet {
             }
             
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused, forceInactive);
+            buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused, forceInactive, showKbHints);
             g.setFont(prevFontFace, prevFontStyle, prevFontSize);
         }
         
         if (isSelectionEnabled && h < getTotalBtnsH()) {
             g.setColor(0xffffff);
-            int selectionMarkY0 = h * scrollOffset / getTotalBtnsH();
-            int selectionMarkY1 = h * (scrollOffset + h) / getTotalBtnsH();
-            g.drawLine(x0 + w - 1, y0 + selectionMarkY0, x0 + w - 1, y0 + selectionMarkY1);
+            int scrollBarMarkY0 = h * scrollOffset / getTotalBtnsH();
+            int scrollBarMarkY1 = h * (scrollOffset + h) / getTotalBtnsH();
+            g.drawLine(x0 + w - 1, y0 + scrollBarMarkY0, x0 + w - 1, y0 + scrollBarMarkY1);
         }
     }
     
@@ -358,6 +412,12 @@ public class ButtonCol extends AbstractButtonSet {
                     repaint();
                 }
             });
+        }
+    }
+
+    private void stopAnimation() {
+        if (animationThread != null) {
+            animationThread.stop();
         }
     }
 }
