@@ -21,18 +21,18 @@ public class List extends UIComponent implements IContainer {
     
     protected int selected = 0;
     protected int prevSelected = 0;
-    protected boolean isSelectionEnabled = false;
+    protected boolean isSelectionEnabled = true;
     protected boolean isSelectionVisible = false;
     
     private AnimationThread animationThread = null;
     private int elemH = H_AUTO;
     
-    private boolean isScrollable = false;
-    private boolean trimHeight = false;
+    private boolean isScrollable = true;
+    private boolean trimHeight = true;
     private int hUntilTrim, prevTotalelemsH;
     private int scrollOffset = 0;
     protected int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
-    private boolean startFromBottom;
+    private boolean startFromBottom = false;
     private boolean enableAnimations = true;
     private boolean isInited = false;
     protected boolean ignoreKeyRepeated = true;
@@ -46,6 +46,7 @@ public class List extends UIComponent implements IContainer {
     public void init() {
     	try {
     		ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
+    		isSelectionVisible = isSelectionVisible || getUISettings().showKbHints();
     	} catch (Exception ex) { }
     	
     	isInited = true;
@@ -149,7 +150,7 @@ public class List extends UIComponent implements IContainer {
         return elements.length * getElemH();
     }
     
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (!isVisible) {
             return false;
         }
@@ -164,7 +165,7 @@ public class List extends UIComponent implements IContainer {
         
         prevSelected = selected;
         
-        return elements[selected].pointerReleased(x, y);
+        return elements[selected].pointerClicked(x, y);
     }
     
     public boolean handlePointerPressed(int x, int y) {
@@ -194,10 +195,6 @@ public class List extends UIComponent implements IContainer {
         scrollOffsetWhenPressed = scrollOffset;
         
         setSelected((y - y0 + scrollOffset) / elemH);
-        
-        if (isSelectionEnabled) {
-            isSelectionVisible = true;
-        }
         
         elements[selected].pointerPressed(x, y);
         
@@ -258,7 +255,7 @@ public class List extends UIComponent implements IContainer {
 	   }
 	   switch (keyCode) {
        default:
-           switch (RootContainer.getGameActionn(keyCode)) {
+           switch (RootContainer.getAction(keyCode)) {
                case Keys.UP:
                    if (selected > 0) {
                        setSelected(selected-1);
@@ -281,17 +278,19 @@ public class List extends UIComponent implements IContainer {
 	   int selectedH = elemH * selected;
 	   int startY = scrollOffset;
 	   int targetY = scrollOffset;
+       int topLimitY = 0;
+       int bottomLimitY = elemH*elements.length - h;
 	   if (selectedH - elemH < scrollOffset) {
-	       targetY = Math.max(0, selectedH - elemH * 3 / 4);
+	       targetY = Math.max(topLimitY, selectedH - elemH * 3 / 4);
 	   }
 	   
 	   if (selectedH + elemH > scrollOffset + h) {
-	       targetY = Math.min(elemH*elements.length - h, selectedH - h + elemH + elemH * 3 / 4);
+	       targetY = Math.min(bottomLimitY, selectedH - h + elemH + elemH * 3 / 4);
 	   }
 	   
 	   if (enableAnimations && targetY != startY) {
 	       initAnimationThread();
-	       animationThread.animate(0, startY, 0, targetY, 200);
+	       animationThread.animate(0, startY, 0, targetY, 200, 0, 0, topLimitY, bottomLimitY);
 	   } else {
 	       scrollOffset = targetY;
 	   }
