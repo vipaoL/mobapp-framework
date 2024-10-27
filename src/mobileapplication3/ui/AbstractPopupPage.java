@@ -9,10 +9,11 @@ package mobileapplication3.ui;
  *
  * @author vipaol
  */
-public abstract class AbstractPopupWindow extends Container {
+public abstract class AbstractPopupPage extends Page {
     protected IPopupFeedback feedback;
 
-    public AbstractPopupWindow(IPopupFeedback parent) {
+    public AbstractPopupPage(String title, IPopupFeedback parent) {
+        super(title);
         this.feedback = parent;
     }
 

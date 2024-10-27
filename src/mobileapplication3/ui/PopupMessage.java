@@ -9,7 +9,7 @@ package mobileapplication3.ui;
  *
  * @author vipaol
  */
-public class PopupMessage extends AbstractPopupWindow {
+public class PopupMessage extends AbstractPopupPage {
     
     private String message;
     
