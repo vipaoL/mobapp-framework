@@ -5,8 +5,6 @@
  */
 package mobileapplication3.ui;
 
-import java.util.Random;
-
 import mobileapplication3.platform.ui.Graphics;
 import mobileapplication3.platform.ui.Image;
 
@@ -23,21 +21,30 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     protected boolean isVisible = true;
     protected boolean isFocused = true;
     protected boolean isActive = true;
-    private boolean dragged = false;
     protected int pressedX, pressedY;
-    private int bgColor = 0x000000;
+    private int bgColor = COLOR_TRANSPARENT;
     private boolean roundBg = false;
     private int padding;
     protected Image bg = null;
     private IUIComponent popupWindow = null;
     protected IContainer parent = null;
     protected boolean repaintOnlyOnFlushGraphics = false;
+    private boolean isCapturingForPopup = false;
     
     public Container() {
         components = new IUIComponent[0];
     }
     
-    public void init() { }
+    public void init() {
+    	for (int i = 0; i < components.length; i++) {
+    		if (components[i] != null) {
+    			components[i].init();
+    		}
+		}
+        if (popupWindow != null) {
+            popupWindow.init();
+        }
+    }
 
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
@@ -62,6 +69,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     public Image getCapture() {
     	try {
 	        Image capture = Image.createImage(w, h);
+            isCapturingForPopup = true;
 	        onPaint(capture.getGraphics(), true);
 	        return capture;
     	} catch (Exception ex) {
@@ -93,7 +101,9 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 if (components[i] != null) {
                 	//System.out.println(getClass().getName() + " set as parent for " + components[i].getClass().getName());
                     components[i].setParent(this);
-                    components[i].init();
+                    if (hasParent()) {
+                    	components[i].init();
+                    }
                 }
             }
         }
@@ -197,18 +207,20 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         g.setClip(x0, y0, w, h);
         drawBg(g, x0, y0, w, h, forceInactive);
         setBounds(x0, y0, w, h);
-        for (int i = 0; i < uiComponents.length; i++) {
-        	try {
-	            if (uiComponents[i] != null) {
-	                uiComponents[i].paint(g, forceInactive);
-	            }
-        	} catch (Exception ex) { }
-        }
-        
-        if (popupWindow != null) {
+
+        if (popupWindow == null || isCapturingForPopup) {
+            for (int i = 0; i < uiComponents.length; i++) {
+                try {
+                    if (uiComponents[i] != null) {
+                        uiComponents[i].paint(g, forceInactive);
+                    }
+                } catch (Exception ex) { }
+            }
+            isCapturingForPopup = false;
+        } else {
             popupWindow.paint(g, x0, y0, w, h, forceInactive);
         }
-        
+
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
     
@@ -328,20 +340,14 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return true;
     }
 
-    public boolean pointerReleased(int x, int y) {
+    public boolean pointerClicked(int x, int y) {
         if (!checkTouchEvent(x, y)) {
-            return false;
-        }
-        
-        if (dragged) {
-            dragged = false;
             return false;
         }
         
         if (popupWindow != null) {
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
-            popupWindow.pointerReleased(x, y);
-            repaint();
+            popupWindow.pointerClicked(x, y);
             if (isTarget) {
                 return true;
             }
@@ -349,6 +355,37 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         IUIComponent[] uiComponents = getComponents();
         
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i] == null) {
+                    continue;
+                }
+                if (uiComponents[i].pointerClicked(x, y)) {
+                    return true;
+                }
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    public boolean pointerReleased(int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+
+        if (popupWindow != null) {
+            boolean isTarget = popupWindow.checkTouchEvent(x, y);
+            popupWindow.pointerReleased(x, y);
+            if (isTarget) {
+                return true;
+            }
+        }
+
+        IUIComponent[] uiComponents = getComponents();
+
         try {
             for (int i = uiComponents.length - 1; i >= 0; i--) {
                 if (uiComponents[i] == null) {
@@ -361,7 +398,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         } catch(Exception ex) {
             ex.printStackTrace();
         }
-        
+
         return false;
     }
 
@@ -373,14 +410,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         if (Math.abs(x - pressedX) + Math.abs(y - pressedY) < 5) {
             return false;
         }
-        
-        dragged = true;
-        
+
         if (popupWindow != null) {
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
             popupWindow.pointerDragged(x, y);
             if (isTarget) {
-                repaint();
                 return true;
             }
         }
@@ -393,7 +427,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].pointerDragged(x, y)) {
-                    repaint();
                     return true;
                 }
             }
@@ -415,7 +448,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
             popupWindow.pointerPressed(x, y);
             if (isTarget) {
-                repaint();
                 return true;
             }
         }
@@ -428,7 +460,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].pointerPressed(x, y)) {
-                    repaint();
                     return true;
                 }
             }
@@ -445,7 +476,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         if (popupWindow != null) {
             popupWindow.keyPressed(keyCode, count);
-            repaint();
             return true;
         }
         
@@ -456,9 +486,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].keyPressed(keyCode, count)) {
-                	if (isVisible) {
-                		repaint();
-                	}
                     return true;
                 }
             }
@@ -476,7 +503,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         if (popupWindow != null) {
             popupWindow.keyReleased(keyCode, count);
-            repaint();
             return true;
         }
         
@@ -487,9 +513,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].keyReleased(keyCode, count)) {
-                	if (isVisible) {
-                		repaint();
-                	}
                     return true;
                 }
             }
@@ -507,7 +530,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         if (popupWindow != null) {
             popupWindow.keyRepeated(keyCode, pressedCount);
-            repaint();
             return true;
         }
         
@@ -518,7 +540,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].keyRepeated(keyCode, pressedCount)) {
-                    repaint();
                     return true;
                 }
             }
@@ -664,7 +685,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             }
         }
     }
-    
+
+    public boolean isOnScreen() {
+    	return hasParent() && parent.isOnScreen();
+    }
+
     protected abstract void onSetBounds(int x0, int y0, int w, int h);
     
 }
