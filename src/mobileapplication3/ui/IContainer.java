@@ -16,4 +16,5 @@ public interface IContainer {
     public Graphics getUGraphics();
     public void flushGraphics();
 	public UISettings getUISettings();
+	public boolean isOnScreen();
 }
