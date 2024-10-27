@@ -39,10 +39,11 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-        buttons[0].paint(g, x0, y0, w, h, isSelectionVisible, isFocused, forceInactive);
+    	boolean drawAsSelected = isSelectionVisible && isFocused;
+        buttons[0].paint(g, x0, y0, w, h, drawAsSelected, isFocused, forceInactive, showKbHints);
     }
 
-    public boolean handlePointerReleased(int x, int y) {
+    public boolean handlePointerClicked(int x, int y) {
         if (checkTouchEvent(x, y)) {
             buttons[0].invokePressed(true, isSelectionEnabled);
             return true;
@@ -50,8 +51,8 @@ public class ButtonComponent extends AbstractButtonSet {
         return false;
     }
 
-    public boolean handleKeyPressed(int keyCode, int count) {
-        if (RootContainer.getGameActionn(keyCode) == Keys.FIRE) {
+    public boolean onKeyPressed(int keyCode, int count) {
+        if (isSelectionEnabled && RootContainer.getAction(keyCode) == Keys.FIRE) {
             buttons[0].invokePressed(true, true);
             return true;
         } else {
@@ -65,6 +66,16 @@ public class ButtonComponent extends AbstractButtonSet {
     
     public IUIComponent setBgColor(int color) {
     	buttons[0].setBgColor(color);
+    	return this;
+    }
+    
+    public ButtonComponent setBindedKeyCode(int keyCode) {
+    	buttons[0].setBindedKeyCode(keyCode);
+    	return this;
+    }
+    
+    public ButtonComponent setBindedKeyCodes(int[] keyCodes) {
+    	buttons[0].setBindedKeyCodes(keyCodes);
     	return this;
     }
     

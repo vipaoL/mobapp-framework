@@ -15,7 +15,8 @@ import mobileapplication3.platform.ui.Graphics;
  */
 public abstract class Button {
 
-    private String text;
+	private String text;
+    private String kbHint = "";
     private boolean isActive = true;
     protected int bgColor;
     protected int bgColorInactive;
@@ -28,11 +29,14 @@ public abstract class Button {
     private int prevW;
     public Font font;
     private Font prevGetLineBoundsFont;
+    private boolean wasKbHintVisible = false;
+    
+    private int[] bindedKeyCodes = null;
     
     public Button(String title) {
         setFont(Font.getDefaultFontSize());
         this.bgPadding = 0;
-        this.selectedBgColor = 0x002255;
+        this.selectedBgColor = IUIComponent.BG_COLOR_SELECTED;
         this.fontColorInactive = IUIComponent.FONT_COLOR_INACTIVE;
         this.fontColor = IUIComponent.FONT_COLOR;
         this.bgColorInactive = IUIComponent.BG_COLOR_INACTIVE;
@@ -143,7 +147,45 @@ public abstract class Button {
         return text;
     }
     
-    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
+    private void setKbHint(String s) {
+        if (s == null) {
+            s = "";
+        }
+        kbHint = s;
+    }
+    
+    public Button setBindedKeyCode(int keyCode) {
+    	return setBindedKeyCodes(new int[] {keyCode});
+    }
+    
+    public Button setBindedKeyCodes(int[] keyCodes) {
+    	if (keyCodes == null || keyCodes.length == 0) {
+    		resetKeyBinds();
+    		return this;
+    	}
+
+    	bindedKeyCodes = keyCodes;
+    	String hint = "";
+    	for (int i = 0; i < keyCodes.length; i++) {
+    		hint += "," + Keys.getButtonName(keyCodes[i]);
+		}
+    	if (hint.length() > 0) {
+    		hint = hint.substring(1);
+    	}
+    	setKbHint("(" + hint + ")");
+    	return this;
+    }
+    
+    public void resetKeyBinds() {
+    	bindedKeyCodes = new int[] {};
+		setKbHint(null);
+    }
+    
+    public int[] getBindedKeyCodes() {
+    	return bindedKeyCodes;
+    }
+    
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive, boolean kbHintVisible) {
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
@@ -159,7 +201,7 @@ public abstract class Button {
         g.setClip(x0, y0, w, h);
         
         drawBg(g, x0, y0, w, h, isSelected, drawAsInactive);
-        drawText(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
+        drawText(g, text, x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
         drawSelectionMark(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
         
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
@@ -177,17 +219,21 @@ public abstract class Button {
         }
 	}
     
-    protected void drawText(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
+    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
     	Font prevFont = g.getFont();
         setFont(Font.getDefaultFontSize());
         
-        int[][] lineBounds = getLineBounds(text, font, w, bgPadding);
+        if (showKbHints) {
+        	text += kbHint;
+        }
+        
+        int[][] lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
         if (h / lineBounds.length < font.getHeight()) {
         	setFont(Font.SIZE_MEDIUM);
-        	lineBounds = getLineBounds(text, font, w, bgPadding);
+        	lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
         	if (h / lineBounds.length < font.getHeight()) {
             	setFont(Font.SIZE_SMALL);
-            	lineBounds = getLineBounds(text, font, w, bgPadding);
+            	lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
             }
         }
         setFont(font.getSize(), g);
@@ -239,8 +285,8 @@ public abstract class Button {
         }
     }
     
-    private int[][] getLineBounds(String text, Font font, int w, int padding) {
-        if (lineBounds != null && w == prevW && font.getSize() == prevGetLineBoundsFont.getSize()) {
+    private int[][] getLineBounds(String text, Font font, int w, int padding, boolean kbHintVisible) {
+        if (lineBounds != null && w == prevW && font.getSize() == prevGetLineBoundsFont.getSize() && kbHintVisible == wasKbHintVisible) {
             return lineBounds;
         }
         

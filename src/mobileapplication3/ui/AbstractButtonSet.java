@@ -26,10 +26,13 @@ public abstract class AbstractButtonSet extends UIComponent {
     protected boolean isSelectionEnabled = false;
     protected boolean isSelectionVisible = false;
     protected boolean ignoreKeyRepeated = true;
+    protected boolean showKbHints;
     
     public void init() {
     	try {
     		ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
+    		showKbHints = getUISettings().showKbHints();
+    		isSelectionVisible = isSelectionVisible || showKbHints;
     	} catch (Exception ex) { }
     }
 
@@ -112,10 +115,6 @@ public abstract class AbstractButtonSet extends UIComponent {
     
     public AbstractButtonSet setIsSelectionEnabled(boolean selectionEnabled) {
         this.isSelectionEnabled = selectionEnabled;
-        if (buttons == null) {
-            return this;
-        }
-        
         return this;
     }
 
@@ -143,7 +142,7 @@ public abstract class AbstractButtonSet extends UIComponent {
     }
 
     public boolean canBeFocused() {
-        if (buttons == null) {
+        if (buttons == null || !isSelectionEnabled) {
             return false;
         }
         
@@ -159,10 +158,47 @@ public abstract class AbstractButtonSet extends UIComponent {
     
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
     	if (ignoreKeyRepeated) {
-    		return isFocused && isVisible;
+    		return isSelectionEnabled && isFocused && isVisible;
     	}
-    	
-        return handleKeyPressed(keyCode, 1);
+
+    	if (onKeyPressed(keyCode, pressedCount)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    protected final boolean handleKeyPressed(int keyCode, int count) {
+    	if (handleBindsOnKeyPressed(keyCode)) {
+    		return true;
+    	}
+    	if (onKeyPressed(keyCode, count)) {
+    		return true;
+    	}
+    	return isFocused;
+    }
+    
+    protected boolean onKeyPressed(int keyCode, int count) {
+    	return false;
+    }
+    
+    protected boolean handleBindsOnKeyPressed(int keyCode) {
+    	for (int i = 0; i < buttons.length; i++) {
+    		Button button = buttons[i];
+    		if (button.isActive()) {
+	    		int[] binds = button.getBindedKeyCodes();
+	    		if (binds == null) {
+	    			continue;
+	    		}
+	
+	    		for (int j = 0; j < binds.length; j++) {
+	    			if (keyCode == binds[j]) {
+	    				button.buttonPressed();
+	    				return true;
+	    			}
+	    		}
+    		}
+    	}
+    	return false;
     }
     
     public abstract int getMinPossibleWidth();
