@@ -16,7 +16,7 @@ public class ImageComponent extends UIComponent {
 		return false;
 	}
 
-	protected boolean handlePointerReleased(int x, int y) {
+	protected boolean handlePointerClicked(int x, int y) {
 		return false;
 	}
 
