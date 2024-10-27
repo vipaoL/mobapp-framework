@@ -30,4 +30,57 @@ public class Keys {
 		GAME_B = 10,
 		GAME_C = 11,
 		GAME_D = 12;
+
+	public static final String getButtonName(int keyCode) {
+		switch (keyCode) {
+		case KEY_SOFT_LEFT:
+			return "LSoft";
+		case KEY_SOFT_RIGHT:
+			return "RSoft";
+		case UP:
+			return "Up";
+		case DOWN:
+			return "Down";
+		case LEFT:
+			return "Left";
+		case RIGHT:
+			return "Right";
+		case FIRE:
+			return "Fire";
+		case GAME_A:
+			return "gA";
+		case GAME_B:
+			return "gB";
+		case GAME_C:
+			return "gC";
+		case GAME_D:
+			return "gD";
+		case KEY_NUM0:
+			return "0";
+		case KEY_NUM1:
+			return "1";
+		case KEY_NUM2:
+			return "2";
+		case KEY_NUM3:
+			return "3";
+		case KEY_NUM4:
+			return "4";
+		case KEY_NUM5:
+			return "5";
+		case KEY_NUM6:
+			return "6";
+		case KEY_NUM7:
+			return "7";
+		case KEY_NUM8:
+			return "8";
+		case KEY_NUM9:
+			return "9";
+		case KEY_STAR:
+			return "*";
+		case KEY_POUND:
+			return "#";
+		default:
+			return "?";
+		}
+	}
 }
