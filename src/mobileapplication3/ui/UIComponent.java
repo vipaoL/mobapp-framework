@@ -44,21 +44,20 @@ public abstract class UIComponent implements IUIComponent {
             int prevClipW = g.getClipWidth();
             int prevClipH = g.getClipHeight();
             
-            x0 += padding;
-            y0 += padding;
-            w -= padding*2;
-            h -= padding*2;
+//            x0 += padding;
+//            y0 += padding;
+//            w -= padding*2;
+//            h -= padding*2;
             
             if (w <= 0 || h <= 0) {
             	return;
             }
             
-            g.setClip(x0, y0, w, h);
+            g.setClip(x0 + padding, y0 + padding, w - padding*2, h - padding*2);
             
             setBounds(x0, y0, w, h);
-            
-            drawBg(g, x0, y0, w, h, isActive && !forceInactive);
-            onPaint(g, x0, y0, w, h, forceInactive);
+            drawBg(g, x0 + padding, y0 + padding, w - padding*2, h - padding*2, isActive && !forceInactive);
+            onPaint(g, x0 + padding, y0 + padding, w - padding*2, h - padding*2, forceInactive);
             
             g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
         }
@@ -121,7 +120,7 @@ public abstract class UIComponent implements IUIComponent {
     public boolean repaintOnlyOnFlushGraphics() {
         return false;
     }
-
+    
     public boolean toggleIsVisible() {
         setVisible(!isVisible);
         return isVisible;
@@ -275,7 +274,7 @@ public abstract class UIComponent implements IUIComponent {
             }
         }
     }
-    
+
     public Graphics getUGraphics() {
     	if (parent != null) {
             return parent.getUGraphics();
@@ -300,12 +299,26 @@ public abstract class UIComponent implements IUIComponent {
             }
         }
     }
-    
+
+    public boolean isOnScreen() {
+    	return hasParent() && parent.isOnScreen();
+    }
+
+    public void onShow() { }
+    public void onHide() { }
+
     public boolean pointerReleased(int x, int y) {
         if (!(isVisible && checkTouchEvent(x, y))) {
             return false;
         }
         return handlePointerReleased(x, y);
+    }
+
+    public boolean pointerClicked(int x, int y) {
+        if (!(isVisible && checkTouchEvent(x, y))) {
+            return false;
+        }
+        return handlePointerClicked(x, y);
     }
     
     public boolean pointerDragged(int x, int y) {
@@ -329,13 +342,6 @@ public abstract class UIComponent implements IUIComponent {
         return handleKeyPressed(keyCode, count);
     }
     
-    public boolean keyReleased(int keyCode, int count) {
-    	if (!isActive || !isVisible) {
-            return false;
-        }
-        return handleKeyReleased(keyCode, count);
-    }
-    
     public boolean keyRepeated(int keyCode, int pressedCount) {
         if (!isActive || !isVisible) {
             return false;
@@ -343,26 +349,34 @@ public abstract class UIComponent implements IUIComponent {
         return handleKeyRepeated(keyCode, pressedCount);
     }
     
+    public boolean keyReleased(int keyCode, int count) {
+    	if (!isActive || !isVisible) {
+            return false;
+        }
+        return handleKeyReleased(keyCode, count);
+    }
+
     protected boolean handleKeyReleased(int keyCode, int pressedCount) {
         return false;
     }
-
+    
     protected boolean handleKeyRepeated(int keyCode, int pressedCount) {
+        return false;
+    }
+
+    protected boolean handlePointerReleased(int x, int y) {
         return false;
     }
     
     protected boolean handlePointerDragged(int x, int y) {
         return false;
     }
-    
+
     protected boolean handlePointerPressed(int x, int y) {
         return false;
     }
-    
-    public void onShow() { }
-    public void onHide() { }
-    
-    protected abstract boolean handlePointerReleased(int x, int y);
+
+    protected abstract boolean handlePointerClicked(int x, int y);
     protected abstract boolean handleKeyPressed(int keyCode, int count);
     protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
     
