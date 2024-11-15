@@ -14,13 +14,13 @@ public abstract class Page extends Container {
     
     protected TextComponent title = null;
     protected IUIComponent pageContent = null;
-    protected ButtonRow actionButtons = null;
+    protected ButtonRow actionButtons;
     protected int margin;
     protected boolean isInited = false;
 
     public Page(String title) {
         this.title = new TextComponent(title);
-        actionButtons = (ButtonRow) new ButtonRow() {
+        actionButtons = new ButtonRow() {
         	public boolean canBeFocused() {
         		return false;
         	}
