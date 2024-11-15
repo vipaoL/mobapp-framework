@@ -130,9 +130,9 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public void showPopup(IUIComponent w) {
+        w.setParent(this);
+        w.init();
         popupWindow = w;
-        popupWindow.setParent(this);
-        popupWindow.init();
         refreshFocusedComponents();
         refreshSizes();
         repaint();
