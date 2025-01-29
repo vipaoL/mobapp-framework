@@ -184,25 +184,32 @@ public abstract class Button {
     public int[] getBindedKeyCodes() {
     	return bindedKeyCodes;
     }
-    
+
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive, boolean kbHintVisible) {
+    	paint(g, x0, y0, w, h, x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
+    }
+    
+    public void paint(Graphics g, int x0, int y0, int w, int h, int clipX, int clipY, int clipW, int clipH, boolean isSelected, boolean isFocused, boolean drawAsInactive, boolean kbHintVisible) {
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
         
         x0 += bgPadding;
+        clipX += bgPadding;
         y0 += bgPadding;
         w -= bgPadding*2;
+        clipW -= bgPadding*2;
         h -= bgPadding*2;
         if (w <= 0 || h <= 0) {
         	return;
         }
-        g.setClip(x0, y0, w, h);
+
+        g.setClip(clipX, clipY, clipW, clipH);
         
-        drawBg(g, x0, y0, w, h, isSelected, drawAsInactive);
+        drawBg(g, clipX, clipY, clipW, clipH, isSelected, drawAsInactive);
         drawText(g, text, x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
-        drawSelectionMark(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
+        drawSelectionMark(g, clipX, clipY, clipW, clipH, isSelected, isFocused, drawAsInactive);
         
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
