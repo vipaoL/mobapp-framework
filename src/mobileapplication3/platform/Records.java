@@ -2,9 +2,12 @@ package mobileapplication3.platform;
 
 public class Records {
     private final static String STORE_NAME = "records";
+    private static String recordsString = null;
 
     public static int[] getRecords() {
-        String recordsString = Platform.readStoreAsString(STORE_NAME);
+        if (recordsString == null) {
+            recordsString = Platform.readStoreAsString(STORE_NAME);
+        }
 
         if (recordsString == null || recordsString.equals("")) {
             return new int[0];
@@ -52,6 +55,7 @@ public class Records {
             toSave.append(a);
             toSave.append(" ");
         }
-        Platform.storeString(toSave.toString(), STORE_NAME);
+        recordsString = toSave.toString();
+        Platform.storeString(recordsString, STORE_NAME);
     }
 }
