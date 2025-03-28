@@ -84,8 +84,10 @@ public class Settings {
 
         for (int i = 0; i < settingsKeysVals.length / 2; i++) {
             if (settingsKeysVals[i*2].equals(key)) {
-                settingsKeysVals[i*2 + 1] = value;
-                saveToDisk();
+                if (!settingsKeysVals[i*2 + 1].equals(value)) {
+                    settingsKeysVals[i*2 + 1] = value;
+                    saveToDisk();
+                }
                 return true;
             }
         }
