@@ -135,7 +135,6 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
         int prevClipH = g.getClipHeight();
         g.setClip(x0, y0, w, h);
         drawBg(g, x0, y0, w, h, forceInactive);
-        setBounds(x0, y0, w, h);
 
         onPaint(g, x0, y0, w, h, forceInactive);
         if (popupWindow != null) {
