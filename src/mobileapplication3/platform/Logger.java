@@ -8,6 +8,7 @@ import mobileapplication3.platform.ui.Graphics;
  * @author vipaol
  */
 public class Logger {
+    public static final String ERR_PREF = "@err:";
     private static boolean isOnScreenLogEnabled = false;
     private static boolean isOnScreenLogInited = false;
     private static int lastWroteI = 0;
@@ -28,7 +29,6 @@ public class Logger {
         }
         String[] newLog = new String[n];
         if (onScreenLog != null) {
-            System.out.println(Math.min(onScreenLog.length, newLog.length));
             int minL = Math.min(onScreenLog.length, newLog.length);
             System.arraycopy(onScreenLog, 0, newLog, 0, minL);
             if (onScreenLogOffset >= minL) {
@@ -84,11 +84,13 @@ public class Logger {
 
     public static void log(Throwable ex) {
         ex.printStackTrace();
-        log(ex.toString());
+        logErr(ex.toString());
     }
 
-    /*public static void logErr(String text, int value) {
-    }*/
+    public static void logErr(String text) {
+        log(ERR_PREF + text);
+    }
+
     public static void log(String text, int value) {
         if (isOnScreenLogEnabled || logToStdout) {
             log(text + value);
@@ -133,13 +135,20 @@ public class Logger {
 
     public static void paint(Graphics g) {
         if (isOnScreenLogEnabled) {
-            g.setColor(150, 255, 150);
             Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_SMALL);
             g.setFont(font);
             for (int j = 0; j <= onScreenLogOffset; j++) {
                 try {
-                    if (onScreenLog[j] != null) {
-                        g.drawString(onScreenLog[j], 0, font.getHeight() * j, Graphics.TOP | Graphics.LEFT);
+                    String str = onScreenLog[j];
+                    int offset = 0;
+                    if (str != null) {
+                        if (str.startsWith(ERR_PREF)) {
+                            g.setColor(255, 150, 150);
+                            offset = ERR_PREF.length();
+                        } else {
+                            g.setColor(150, 255, 150);
+                        }
+                        g.drawSubstring(str, offset, str.length() - offset, 0, font.getHeight() * j, Graphics.TOP | Graphics.LEFT);
                     }
                 } catch (NullPointerException ex) {
                     g.drawString(j + "can't show log:NPE", 0, 0, Graphics.TOP | Graphics.LEFT);
