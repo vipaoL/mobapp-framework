@@ -49,6 +49,7 @@ public interface IUIComponent {
     public void paint(Graphics g, boolean forceInactive);
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
     public boolean canBeFocused();
+    public boolean isFocused();
     public boolean pointerClicked(int x, int y);
     public boolean pointerReleased(int x, int y);
     public boolean pointerDragged(int x, int y);

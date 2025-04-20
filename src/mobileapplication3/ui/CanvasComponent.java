@@ -179,6 +179,10 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
 
     public abstract boolean canBeFocused();
 
+    public boolean isFocused() {
+        return isFocused;
+    }
+
     protected final void refreshFocusedComponents() {
         if (popupWindow != null) {
             popupWindow.setFocused(true);

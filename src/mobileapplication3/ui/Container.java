@@ -263,7 +263,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
         return false;
     }
-    
+
+    public boolean isFocused() {
+        return isFocused;
+    }
+
     protected void refreshFocusedComponents() {
         for (int i = 0; i < components.length; i++) {
             if (components[i] != null) {

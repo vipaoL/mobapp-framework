@@ -117,6 +117,10 @@ public abstract class UIComponent implements IUIComponent {
         return isVisible;
     }
 
+    public boolean isFocused() {
+        return isFocused;
+    }
+
     public boolean repaintOnlyOnFlushGraphics() {
         return false;
     }
