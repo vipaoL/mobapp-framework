@@ -31,6 +31,8 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
 
     public void init() { }
 
+    public void postInit() { }
+
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
         return this;

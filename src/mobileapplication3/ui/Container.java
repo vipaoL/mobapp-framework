@@ -46,6 +46,17 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
     }
 
+    public void postInit() {
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] != null) {
+                components[i].postInit();
+            }
+        }
+        if (popupWindow != null) {
+            popupWindow.postInit();
+        }
+    }
+
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
         return this;

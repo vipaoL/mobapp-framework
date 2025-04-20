@@ -244,6 +244,8 @@ public abstract class UIComponent implements IUIComponent {
     }
     
     public void init() { }
+
+    public void postInit() { }
     
     public IUIComponent setParent(IContainer parent) {
         this.parent = parent;

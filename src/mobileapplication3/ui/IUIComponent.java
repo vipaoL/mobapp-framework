@@ -61,4 +61,5 @@ public interface IUIComponent {
     public void onHide();
     public boolean checkTouchEvent(int x, int y);
     public void init();
+    public void postInit();
 }
