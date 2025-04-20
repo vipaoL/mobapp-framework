@@ -29,6 +29,8 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     protected IContainer parent = null;
     protected boolean repaintOnlyOnFlushGraphics = false;
 
+    public void init() { }
+
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
         return this;
