@@ -77,7 +77,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
         popupWindow.setParent(this);
         popupWindow.init();
         refreshFocusedComponents();
-        refreshSizes();
+        popupWindow.setSize(this.w, h).setPos(x0, y0, TOP | LEFT);
         repaint();
     }
 

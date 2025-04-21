@@ -145,7 +145,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         w.init();
         popupWindow = w;
         refreshFocusedComponents();
-        refreshSizes();
+        popupWindow.setSize(this.w, h).setPos(x0, y0, TOP | LEFT);
         repaint();
     }
     
