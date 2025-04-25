@@ -165,14 +165,17 @@ public abstract class Button {
     	}
 
     	bindedKeyCodes = keyCodes;
-    	String hint = "";
+        StringBuffer hintStringBuffer = new StringBuffer();
     	for (int i = 0; i < keyCodes.length; i++) {
-    		hint += "," + Keys.getButtonName(keyCodes[i]);
+            int keyCode = keyCodes[i];
+            if (keyCode != Keys.KEY_SOFT_LEFT && keyCode != Keys.KEY_SOFT_RIGHT) {
+                hintStringBuffer.append(",").append(Keys.getButtonName(keyCode));
+            }
 		}
-    	if (hint.length() > 0) {
-    		hint = hint.substring(1);
-    	}
-    	setKbHint("(" + hint + ")");
+        String hint = hintStringBuffer.toString();
+        if (hint.length() > 0) {
+            setKbHint("(" + hint.substring(1) + ")");
+        }
     	return this;
     }
     
