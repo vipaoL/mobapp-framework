@@ -1,8 +1,9 @@
 package mobileapplication3.ui;
 
-public abstract class Property {
+public class Property {
 	private String name;
 	private boolean isImmutable;
+	private short value;
 
 	public Property(String name, boolean isCalculatedAutomatically) {
 		isImmutable = isCalculatedAutomatically;
@@ -32,6 +33,11 @@ public abstract class Property {
 		return isImmutable;
 	}
 
-	public abstract short getValue();
-	public abstract void setValue(short value);
+	public short getValue() {
+		return value;
+	}
+
+	public void setValue(short value) {
+		this.value = value;
+	}
 }
