@@ -149,7 +149,25 @@ public class List extends UIComponent implements IContainer {
         
         return elements.length * getElemH();
     }
-    
+
+    public boolean handleMouseEvent(int event, int x, int y) {
+        int scrollOffset = this.scrollOffset;
+        if (event == MOUSE_WHEEL_SCROLLED_DOWN) {
+            scrollOffset += h / 5;
+        } else if (event == MOUSE_WHEEL_SCROLLED_UP) {
+            scrollOffset -= h / 5;
+        } else {
+            return false;
+        }
+        if (enableAnimations && scrollOffset != this.scrollOffset) {
+            initAnimationThread();
+            animationThread.animate(0, this.scrollOffset, 0, scrollOffset, 200, 0, 0, 0, elemH*elements.length - h);
+        } else {
+            this.scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalElemsH() - h));
+        }
+        return true;
+    }
+
     public boolean handlePointerClicked(int x, int y) {
         if (!isVisible) {
             return false;

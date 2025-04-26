@@ -164,6 +164,24 @@ public class Grid extends UIComponent implements IContainer {
     public int getTotalElemsH() {
         return getRowsCount() * getElemH();
     }
+
+    public boolean handleMouseEvent(int event, int x, int y) {
+        int scrollOffset = this.scrollOffset;
+        if (event == MOUSE_WHEEL_SCROLLED_DOWN) {
+            scrollOffset += h / 5;
+        } else if (event == MOUSE_WHEEL_SCROLLED_UP) {
+            scrollOffset -= h / 5;
+        } else {
+            return false;
+        }
+        if (kbSmoothScrolling && scrollOffset != this.scrollOffset) {
+            initAnimationThread();
+            animationThread.animate(0, this.scrollOffset, 0, scrollOffset, 200, 0, 0, 0, getTotalElemsH() - h);
+        } else {
+            this.scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalElemsH() - h));
+        }
+        return true;
+    }
     
     public boolean handlePointerClicked(int x, int y) {
         if (!isVisible) {

@@ -142,6 +142,24 @@ public class ButtonCol extends AbstractButtonSet {
         
         return buttons.length * getBtnH();
     }
+
+    public boolean handleMouseEvent(int event, int x, int y) {
+        int scrollOffset = this.scrollOffset;
+        if (event == MOUSE_WHEEL_SCROLLED_DOWN) {
+            scrollOffset += h / 5;
+        } else if (event == MOUSE_WHEEL_SCROLLED_UP) {
+            scrollOffset -= h / 5;
+        } else {
+            return false;
+        }
+        if (kbSmoothScrolling && scrollOffset != this.scrollOffset) {
+            initAnimationThread();
+            animationThread.animate(0, this.scrollOffset, 0, scrollOffset, 200, 0, 0, 0, btnH*buttons.length - h);
+        } else {
+            this.scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - h));
+        }
+        return true;
+    }
     
     public boolean handlePointerClicked(int x, int y) {
         if (!isVisible) {
