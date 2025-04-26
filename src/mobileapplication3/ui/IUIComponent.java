@@ -32,6 +32,12 @@ public interface IUIComponent {
             BG_COLOR_HIGHLIGHTED = 0x151535,
             FONT_COLOR_INACTIVE = 0x404040,
             FONT_COLOR = 0xffffff;
+    public static final int
+            MOUSE_PRIMARY_PRESSED = 1, MOUSE_PRIMARY_RELEASED = -1,
+            MOUSE_SECONDARY_PRESSED = 2, MOUSE_SECONDARY_RELEASED = -2,
+            MOUSE_WHEEL_PRESSED = 3, MOUSE_WHEEL_RELEASED = -3,
+            MOUSE_PRIMARY_DRAGGED = 4, MOUSE_SECONDARY_DRAGGED = 5, MOUSE_WHEEL_DRAGGED = 6,
+            MOUSE_WHEEL_SCROLLED_DOWN = 7, MOUSE_WHEEL_SCROLLED_UP = -7;
 
     public IUIComponent setParent(IContainer parent);
     public IUIComponent setPos(int x0, int y0, int anchor);
@@ -57,6 +63,7 @@ public interface IUIComponent {
     public boolean keyPressed(int keyCode, int count);
     public boolean keyReleased(int keyCode, int count);
     public boolean keyRepeated(int keyCode, int pressedCount);
+    public boolean mouseEvent(int event, int x, int y);
     public void onShow();
     public void onHide();
     public boolean checkTouchEvent(int x, int y);

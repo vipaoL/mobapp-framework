@@ -483,6 +483,35 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
         return false;
     }
+
+    public boolean mouseEvent(int event, int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+
+        if (popupWindow != null) {
+            boolean isTarget = popupWindow.checkTouchEvent(x, y);
+            if (isTarget) {
+                return popupWindow.mouseEvent(event, x, y); // TODO
+            }
+        }
+
+        IUIComponent[] uiComponents = getComponents();
+
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i] == null) {
+                    continue;
+                }
+                if (uiComponents[i].mouseEvent(event, x, y)) {
+                    return true;
+                }
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
     
     public boolean keyPressed(int keyCode, int count) {
         if (!isActive || !isVisible) {

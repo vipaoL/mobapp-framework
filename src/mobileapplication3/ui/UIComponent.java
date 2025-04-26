@@ -362,6 +362,17 @@ public abstract class UIComponent implements IUIComponent {
         return handleKeyReleased(keyCode, count);
     }
 
+    public boolean mouseEvent(int event, int x, int y) {
+        if (!isActive || !isVisible) {
+            return false;
+        }
+        return handleMouseEvent(event, x, y);
+    }
+
+    protected boolean handleMouseEvent(int event, int x, int y) {
+        return false;
+    }
+
     protected boolean handleKeyReleased(int keyCode, int pressedCount) {
         return false;
     }

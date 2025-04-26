@@ -330,6 +330,27 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     	return false;
     };
 
+    public final boolean mouseEvent(int event, int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+
+        if (popupWindow != null) {
+            boolean isTarget = popupWindow.checkTouchEvent(x, y);
+            popupWindow.mouseEvent(event, x, y);
+            repaint();
+            if (isTarget) {
+                return true;
+            }
+        }
+
+        return handleMouseEvent(event, x, y);
+    }
+
+    public boolean handleMouseEvent(int event, int x, int y) {
+        return false;
+    }
+
     public final boolean keyPressed(int keyCode, int count) {
         if (!isActive || !isVisible) {
             return false;
