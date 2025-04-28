@@ -374,13 +374,18 @@ public class Grid extends UIComponent implements IContainer {
     	int selectedY = selected / cols * elemH;
     	int startY = scrollOffset;
     	int targetY = scrollOffset;
-    	if (selectedY - elemH < scrollOffset) {
-    		targetY = selectedY - elemH * 3 / 4;
-    	}
-    	
-    	if (selectedY + elemH > scrollOffset + h) {
-    		targetY = selectedY - h + elemH + elemH * 3 / 4;
-    	}
+        if (elemH * 2 < h) {
+            if (selectedY < scrollOffset) {
+                targetY = selectedY - elemH * 3 / 4;
+            }
+
+            if (selectedY + elemH > scrollOffset + h) {
+                targetY = selectedY - h + elemH + elemH * 3 / 4;
+            }
+        } else {
+            // if elements are bigger than the screen, just center the targeted one
+            targetY = selectedY - h / 2 + elemH / 2;
+        }
 
         int topLimitY = 0;
         int bottomLimitY = getTotalElemsH() - h;

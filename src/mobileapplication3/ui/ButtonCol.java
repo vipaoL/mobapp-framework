@@ -330,17 +330,22 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     public AbstractButtonSet setSelected(int selected) {
-        int selectedH = btnH * selected;
+        int selectedY = btnH * selected;
         int startY = scrollOffset;
         int targetY = scrollOffset;
         int topLimitY = 0;
         int bottomLimitY = btnH * buttons.length - h;
-        if (selectedH - btnH < scrollOffset) {
-            targetY = Math.max(topLimitY, selectedH - btnH * 3 / 4);
-        }
+        if (btnH * 2 < h) {
+            if (selectedY < scrollOffset) {
+                targetY = Math.max(topLimitY, selectedY - btnH * 3 / 4);
+            }
 
-        if (selectedH + btnH > scrollOffset + h) {
-            targetY = Math.min(bottomLimitY, selectedH - h + btnH + btnH * 3 / 4);
+            if (selectedY + btnH > scrollOffset + h) {
+                targetY = Math.min(bottomLimitY, selectedY - h + btnH + btnH * 3 / 4);
+            }
+        } else {
+            // if buttons are bigger than the screen, just center the targeted one
+            targetY = selectedY - h / 2 + btnH / 2;
         }
 
         if (kbSmoothScrolling && targetY != startY) {

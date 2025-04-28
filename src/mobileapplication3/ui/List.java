@@ -293,18 +293,23 @@ public class List extends UIComponent implements IContainer {
            }
 	   }
 	   
-	   int selectedH = elemH * selected;
+	   int selectedY = elemH * selected;
 	   int startY = scrollOffset;
 	   int targetY = scrollOffset;
        int topLimitY = 0;
        int bottomLimitY = elemH*elements.length - h;
-	   if (selectedH - elemH < scrollOffset) {
-	       targetY = Math.max(topLimitY, selectedH - elemH * 3 / 4);
-	   }
-	   
-	   if (selectedH + elemH > scrollOffset + h) {
-	       targetY = Math.min(bottomLimitY, selectedH - h + elemH + elemH * 3 / 4);
-	   }
+       if (elemH * 2 < h) {
+           if (selectedY < scrollOffset) {
+               targetY = Math.max(topLimitY, selectedY - elemH * 3 / 4);
+           }
+
+           if (selectedY + elemH > scrollOffset + h) {
+               targetY = Math.min(bottomLimitY, selectedY - h + elemH + elemH * 3 / 4);
+           }
+       } else {
+           // if elements are bigger than the screen, just center the targeted one
+           targetY = selectedY - h / 2 + elemH / 2;
+       }
 	   
 	   if (enableAnimations && targetY != startY) {
 	       initAnimationThread();
