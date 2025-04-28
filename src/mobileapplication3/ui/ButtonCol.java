@@ -322,6 +322,14 @@ public class ButtonCol extends AbstractButtonSet {
 	        }
         } while (buttons[selected] instanceof ButtonStub && action != Keys.FIRE);
         
+        if (isSelectionEnabled) {
+            isSelectionVisible = true;
+        }
+
+        return ret;
+    }
+
+    public AbstractButtonSet setSelected(int selected) {
         int selectedH = btnH * selected;
         int startY = scrollOffset;
         int targetY = scrollOffset;
@@ -330,25 +338,20 @@ public class ButtonCol extends AbstractButtonSet {
         if (selectedH - btnH < scrollOffset) {
             targetY = Math.max(topLimitY, selectedH - btnH * 3 / 4);
         }
-        
+
         if (selectedH + btnH > scrollOffset + h) {
             targetY = Math.min(bottomLimitY, selectedH - h + btnH + btnH * 3 / 4);
         }
-        
+
         if (kbSmoothScrolling && targetY != startY) {
             initAnimationThread();
             animationThread.animate(0, startY, 0, targetY, 200, 0, 0, topLimitY, bottomLimitY);
         } else {
             scrollOffset = targetY;
         }
-        
-        if (isSelectionEnabled) {
-            isSelectionVisible = true;
-        }
-        
-        return ret;
+        return super.setSelected(selected);
     }
-    
+
     public ButtonCol enableScrolling(boolean isScrollable, boolean startFromBottom) {
         this.startFromBottom = startFromBottom;
         
