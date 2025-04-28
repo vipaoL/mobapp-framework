@@ -41,7 +41,7 @@ public class AnimationThread implements Runnable {
             return;
         }
 
-        this.frameTime = frameTime;
+        this.frameTime = Math.max(frameTime, 5);
 
         this.leftLimitX = leftLimitX * FP_MATH_MULTIPLIER;
         this.rightLimitX = rightLimitX * FP_MATH_MULTIPLIER;
@@ -53,8 +53,8 @@ public class AnimationThread implements Runnable {
         this.targetX = targetX * FP_MATH_MULTIPLIER;
         this.targetY = targetY * FP_MATH_MULTIPLIER;
 
-        framesCount = FPS * durationMillis / 1000;
-        if (framesCount == 0 || frameTime == 0) {
+        framesCount = durationMillis / frameTime;
+        if (framesCount == 0) {
         	onStep(this.targetX, this.targetY);
         	return;
         }
