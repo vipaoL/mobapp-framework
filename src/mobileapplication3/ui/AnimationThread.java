@@ -97,28 +97,26 @@ public class AnimationThread implements Runnable {
 
     public void run() {
         isRunning = true;
-        for (int i = 0; i < framesCount; i++) {
-            long iterationStartMillis = System.currentTimeMillis();
-            
-            vX -= aX;
-            vY -= aY;
-            x += vX;
-            y += vY;
-            
-            onStep(x, y);
 
-            if (!Mathh.nonStrictIneq(leftLimitX, x, rightLimitX) || !Mathh.nonStrictIneq(topLimitY, y, bottomLimitY)) {
-                break;
-            }
-            
-            try {
+        try {
+            for (int i = 0; i < framesCount; i++) {
+                long iterationStartMillis = System.currentTimeMillis();
+
+                vX -= aX;
+                vY -= aY;
+                x += vX;
+                y += vY;
+
+                onStep(x, y);
+
+                if (!Mathh.nonStrictIneq(leftLimitX, x, rightLimitX) || !Mathh.nonStrictIneq(topLimitY, y, bottomLimitY)) {
+                    break;
+                }
+
                 Thread.sleep(Math.max(0, frameTime - (System.currentTimeMillis() - iterationStartMillis)));
-            } catch (InterruptedException ex) {
-                isRunning = false;
-                return;
             }
-        }
-        onStep(targetX, targetY);
+            onStep(targetX, targetY);
+        } catch (InterruptedException ignored) { }
         isRunning = false;
     }
 
