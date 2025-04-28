@@ -36,7 +36,6 @@ public class AnimationThread implements Runnable {
     }
     
     public void animate(int currX, int currY, int targetX, int targetY, int durationMillis, int leftLimitX, int rightLimitX, int topLimitY, int bottomLimitY, int frameTime) {
-    	Logger.log("dx:"+(targetX-currX)+" dy:"+(targetY-currY)+" t:"+durationMillis+" dt:" + frameTime);
         if (currY == targetY && currX == targetX) {
             return;
         }
