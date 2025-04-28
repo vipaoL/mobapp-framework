@@ -400,11 +400,6 @@ public class List extends UIComponent implements IContainer {
     }
     
     protected void drawBgUnderElement(Graphics g, int x0, int y0, int w, int h, boolean isActive, boolean isSelected) {
-    	int prevClipX = g.getClipX();
-        int prevClipY = g.getClipY();
-        int prevClipW = g.getClipWidth();
-        int prevClipH = g.getClipHeight();
-        
 		if (isActive) {
 			if (isSelected) {
 				g.setColor(COLOR_ACCENT);
@@ -417,8 +412,6 @@ public class List extends UIComponent implements IContainer {
 		
 		int d = Math.min(w/5, h/5);
         g.fillRoundRect(x0, y0, w, h, d, d);
-		
-		g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
 	}
     
     private void initAnimationThread() {

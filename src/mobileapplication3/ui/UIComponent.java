@@ -52,8 +52,15 @@ public abstract class UIComponent implements IUIComponent {
             if (w <= 0 || h <= 0) {
             	return;
             }
-            
-            g.setClip(x0 + padding, y0 + padding, w - padding*2, h - padding*2);
+
+            int clipX = x0 + padding, clipY = y0 + padding, clipW = w - padding * 2, clipH = h - padding * 2, clipX2 = clipX + clipW, clipY2 = clipY + clipH;
+            clipX = Math.max(clipX, prevClipX);
+            clipY = Math.max(clipY, prevClipY);
+            clipX2 = Math.min(clipX2, prevClipX + prevClipW);
+            clipY2 = Math.min(clipY2, prevClipY + prevClipH);
+            clipW = Math.max(0, clipX2 - clipX);
+            clipH = Math.max(0, clipY2 - clipY);
+            g.setClip(clipX, clipY, clipW, clipH);
             
             setBounds(x0, y0, w, h);
             drawBg(g, x0 + padding, y0 + padding, w - padding*2, h - padding*2, isActive && !forceInactive);

@@ -210,12 +210,20 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
     	
         IUIComponent[] uiComponents = getComponents();
-        
+
+        // TODO move to Graphics and make it similar to how it works in android
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
-        g.setClip(x0, y0, w, h);
+        int clipX = x0, clipY = y0, clipW = w, clipH = h, clipX2 = clipX + clipW, clipY2 = clipY + clipH;
+        clipX = Math.max(clipX, prevClipX);
+        clipY = Math.max(clipY, prevClipY);
+        clipX2 = Math.min(clipX2, prevClipX + prevClipW);
+        clipY2 = Math.min(clipY2, prevClipY + prevClipH);
+        clipW = Math.max(0, clipX2 - clipX);
+        clipH = Math.max(0, clipY2 - clipY);
+        g.setClip(clipX, clipY, clipW, clipH);
         drawBg(g, x0, y0, w, h, forceInactive);
         setBounds(x0, y0, w, h);
 

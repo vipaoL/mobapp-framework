@@ -208,6 +208,13 @@ public abstract class Button {
         	return;
         }
 
+        int clipX2 = clipX + clipW, clipY2 = clipY + clipH;
+        clipX = Math.max(clipX, prevClipX);
+        clipY = Math.max(clipY, prevClipY);
+        clipX2 = Math.min(clipX2, prevClipX + prevClipW);
+        clipY2 = Math.min(clipY2, prevClipY + prevClipH);
+        clipW = Math.max(0, clipX2 - clipX);
+        clipH = Math.max(0, clipY2 - clipY);
         g.setClip(clipX, clipY, clipW, clipH);
         
         drawBg(g, clipX, clipY, clipW, clipH, isSelected, drawAsInactive);
