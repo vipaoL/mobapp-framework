@@ -379,40 +379,19 @@ public class ButtonCol extends AbstractButtonSet {
         	int prevFontFace = g.getFontFace();
 			int prevFontStyle = g.getFontStyle();
 			int prevFontSize = g.getFontSize();
-			int prevFontHeight = g.getFontHeight();
-			
-            int btnH = this.btnH;
-            int btnX = x0;
-            int clipX = btnX;
-            int btnY = y0 - scrollOffset + i*btnH;
-            int btnBottomY = y0 + h;
-            int btnW = w;
-            int clipW = btnW;
-            
-            if (btnY + btnH - prevFontHeight < y0) {
+
+            int btnY = y0 - scrollOffset + i* this.btnH;
+
+            if (btnY + this.btnH < y0) {
                 continue;
             }
             
-            if (btnY + btnH/2 > y0 + h) {
+            if (btnY > y0 + h) {
                 break;
             }
             
-            if (btnY < y0) {
-                clipX += (y0 - btnY) / 2;
-                clipW -= (y0 - btnY);
-                btnH = btnH - (y0 - btnY);
-                btnY = y0;
-            }
-            
-            if (btnY + btnH > btnBottomY) {
-                clipX += (btnY + btnH - btnBottomY) / 2;
-                clipW -= (btnY + btnH - btnBottomY);
-                btnH = btnBottomY - btnY;
-                btnY = btnBottomY - btnH;
-            }
-            
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            buttons[i].paint(g, btnX, btnY, btnW, btnH, clipX, btnY, clipW, btnH, drawAsSelected, isFocused, forceInactive, showKbHints);
+            buttons[i].paint(g, x0, btnY, w, this.btnH, x0, btnY, w, this.btnH, drawAsSelected, isFocused, forceInactive, showKbHints);
             g.setFont(prevFontFace, prevFontStyle, prevFontSize);
         }
         

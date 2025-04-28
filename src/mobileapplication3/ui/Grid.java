@@ -428,33 +428,14 @@ public class Grid extends UIComponent implements IContainer {
             int elemY = y0 - scrollOffset + cellY*this.elemH + elementsPadding;
             int bottomY = y0 + h;
             
-            if (elemY + elemH - prevFont.getHeight() < y0) {
+            if (elemY + elemH < y0) {
                 continue;
             }
             
-            if (elemY + elemH/10 > y0 + h) {
+            if (elemY > y0 + h) {
                 break;
             }
-            
-            int elemWBeforeWrap = elemW;
-            if (elemY < y0) {
-                elemX += (y0 - elemY) / 16;
-                elemW -= (y0 - elemY) / 8;
-                elemH -= (y0 - elemY);
-                elemY = y0;
-            }
-            
-            if (elemY + elemH > bottomY) {
-                elemX += (elemY + elemH - bottomY) / 16;
-                elemW -= (elemY + elemH - bottomY) / 8;
-                elemH = bottomY - elemY;
-                elemY = bottomY - elemH;
-            }
-            
-            if (elemWBeforeWrap != elemW) {
-            	elemX += (elemWBeforeWrap - elemW) * (cols - 2*cellX - 1) / 2;
-            }
-            
+
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
             drawBgUnderElement(g, elemX, elemY, elemW, elemH, !forceInactive, drawAsSelected);
             elements[i].paint(g, elemX, elemY, elemW, elemH, forceInactive);

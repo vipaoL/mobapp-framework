@@ -349,36 +349,19 @@ public class List extends UIComponent implements IContainer {
         for (int i = 0; i < elements.length; i++) {
             Font prevFont = g.getFont();
             int elemH = this.elemH;
-            int elemX = x0;
             int elemY = y0 - scrollOffset + i*elemH;
-            int elemBottomY = y0 + h;
-            int elemW = w;
-            
-            if (elemY + elemH - prevFont.getHeight() < y0) {
+
+            if (elemY + elemH < y0) {
                 continue;
             }
             
-            if (elemY + elemH/2 > y0 + h) {
+            if (elemY > y0 + h) {
                 break;
             }
             
-            if (elemY < y0) {
-                elemX += (y0 - elemY) / 2;
-                elemW -= (y0 - elemY);
-                elemH = elemH - (y0 - elemY);
-                elemY = y0;
-            }
-            
-            if (elemY + elemH > elemBottomY) {
-                elemX += (elemY + elemH - elemBottomY) / 2;
-                elemW -= (elemY + elemH - elemBottomY);
-                elemH = elemBottomY - elemY;
-                elemY = elemBottomY - elemH;
-            }
-            
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            drawBgUnderElement(g, elemX, elemY, elemW, elemH, !forceInactive, drawAsSelected);
-            elements[i].paint(g, elemX, elemY, elemW, elemH, forceInactive);
+            drawBgUnderElement(g, x0, elemY, w, elemH, !forceInactive, drawAsSelected);
+            elements[i].paint(g, x0, elemY, w, elemH, forceInactive);
             g.setFont(prevFont);
 
             if (drawAsSelected) {
