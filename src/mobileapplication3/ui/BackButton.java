@@ -1,7 +1,5 @@
 package mobileapplication3.ui;
 
-import mobileapplication3.platform.ui.RootContainer;
-
 public class BackButton extends Button {
 	IPopupFeedback windowParent;
 
