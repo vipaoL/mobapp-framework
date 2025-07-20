@@ -3,7 +3,8 @@ package mobileapplication3.ui;
 public class Property {
 	private String name;
 	private boolean isImmutable;
-	private short value;
+	private int value;
+	private int minValue = Short.MIN_VALUE, maxValue = Short.MAX_VALUE;
 
 	public Property(String name, boolean isCalculatedAutomatically) {
 		isImmutable = isCalculatedAutomatically;
@@ -21,12 +22,13 @@ public class Property {
 		return name;
 	}
 
+	// TODO: replace with normal integers
 	public short getMaxValue() {
-		return Short.MAX_VALUE;
+		return (short) maxValue;
 	}
 
 	public short getMinValue() {
-		return Short.MIN_VALUE;
+		return (short) minValue;
 	}
 
 	public final boolean isCalculated() {
@@ -34,10 +36,20 @@ public class Property {
 	}
 
 	public short getValue() {
-		return value;
+		return (short) value;
 	}
 
-	public void setValue(short value) {
+	public void setValue(int value) {
 		this.value = value;
+	}
+
+	public Property setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+		return this;
+	}
+
+	public Property setMinValue(int minValue) {
+		this.minValue = minValue;
+		return this;
 	}
 }
