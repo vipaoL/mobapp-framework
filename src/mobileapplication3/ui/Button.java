@@ -132,11 +132,12 @@ public abstract class Button {
         return this;
     }
     
-    public void setTitle(String s) {
+    public Button setTitle(String s) {
         if (s == null) {
             s = "<null>";
         }
         text = s;
+        return this;
     }
     
     public String getTitle() {
