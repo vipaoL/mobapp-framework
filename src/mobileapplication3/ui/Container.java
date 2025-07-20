@@ -749,6 +749,30 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
     }
 
+    public int getLeftX() {
+        return x0;
+    }
+
+    public int getRightX() {
+        return x0 + w;
+    }
+
+    public int getTopY() {
+        return y0;
+    }
+
+    public int getBottomY() {
+        return y0 + h;
+    }
+
+    public int getWidth() {
+        return w;
+    }
+
+    public int getHeight() {
+        return h;
+    }
+
     public boolean isOnScreen() {
     	return hasParent() && parent.isOnScreen();
     }
