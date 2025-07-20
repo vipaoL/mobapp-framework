@@ -267,7 +267,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public IUIComponent refreshSizes() {
-        setSize(w, h);
+        setSize(w++ /* bypass the check (prevW == w) to force refresh */, h);
         return this;
     }
 
