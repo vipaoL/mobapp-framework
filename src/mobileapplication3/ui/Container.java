@@ -5,6 +5,7 @@
  */
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.ui.Graphics;
 import mobileapplication3.platform.ui.Image;
 
@@ -633,7 +634,17 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public IUIComponent setSize(int w, int h) {
-    	if (this.w == w && this.h == h || w == 0 || h == 0) {
+        if (w == 0 || h == 0) {
+            try {
+                throw new Exception("Setting zero size (" + w + ", " + h + ") in" + getClass().getName());
+            } catch (Exception ex) {
+                Logger.log(ex);
+            }
+            return this;
+        }
+
+        if (this.w == w && this.h == h) {
+            Logger.log(w + " " + h + " has not changed (" + getClass().getName() + ")");
     		return this;
     	}
     	
@@ -646,9 +657,9 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     private final void setBounds(int x0, int y0, int w, int h) {
     	if (w == 0 || h == 0) {
             try {
-                throw new Exception("Setting zero as a dimension " + getClass().getName());
+                throw new Exception("Setting zero size (" + w + ", " + h + ") in" + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return;
         }
