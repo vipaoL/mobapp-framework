@@ -36,7 +36,7 @@ public class ButtonPanelVertical extends UIComponent {
     }
 
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-    	int btnW = w / cols;
+        int btnW = w / cols;
         for (int i = 0; i < buttonCols.length; i++) {
             buttonCols[i].paint(g, x0 + btnW * i, y0, btnW, h, forceInactive);
         }
@@ -46,7 +46,7 @@ public class ButtonPanelVertical extends UIComponent {
         if (!checkTouchEvent(x, y)) {
             return false;
         }
-        
+
         for (int i = 0; i < buttonCols.length; i++) {
             if (buttonCols[i].handlePointerClicked(x, y)) {
                 return true;
@@ -62,7 +62,7 @@ public class ButtonPanelVertical extends UIComponent {
         isVisible = b;
         return this;
     }
-    
+
     public boolean canBeFocused() {
         return true;
     }

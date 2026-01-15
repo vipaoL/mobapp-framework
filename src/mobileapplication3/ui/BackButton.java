@@ -3,19 +3,19 @@
 package mobileapplication3.ui;
 
 public class BackButton extends Button {
-	IPopupFeedback windowParent;
+    IPopupFeedback windowParent;
 
-	public BackButton(IPopupFeedback windowParent) {
-		super(!(windowParent instanceof IUIComponent) ? "Exit" : "Back");
-		this.windowParent = windowParent;
-		setBindedKeyCodes(new int[]{Keys.KEY_NUM0});
-		if (!(windowParent instanceof IUIComponent)) {
-			setBgColor(IUIComponent.BG_COLOR_DANGER);
-		}
-	}
+    public BackButton(IPopupFeedback windowParent) {
+        super(!(windowParent instanceof IUIComponent) ? "Exit" : "Back");
+        this.windowParent = windowParent;
+        setBindedKeyCodes(new int[]{Keys.KEY_NUM0});
+        if (!(windowParent instanceof IUIComponent)) {
+            setBgColor(IUIComponent.BG_COLOR_DANGER);
+        }
+    }
 
-	public void buttonPressed() {
-		windowParent.closePopup();
-	}
+    public void buttonPressed() {
+        windowParent.closePopup();
+    }
 
 }

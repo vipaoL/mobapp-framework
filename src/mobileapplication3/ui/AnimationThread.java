@@ -12,7 +12,7 @@ public class AnimationThread implements Runnable {
     public static final int FPS = 20;
     public static final int FRAME_MILLIS = 1000 / FPS;
     public static final int FP_MATH_MULTIPLIER = 1000;
-    
+
     private Thread thread = null;
     private AnimationWorker feedback;
     private boolean isRunning = false;
@@ -22,15 +22,15 @@ public class AnimationThread implements Runnable {
     private int leftLimitX, rightLimitX, topLimitY, bottomLimitY;
     private int vX = 0, vY = 0;
     private int aX, aY;
-    
+
     public AnimationThread(AnimationWorker feedback) {
         this.feedback = feedback;
     }
-    
+
     public void animate(int currX, int currY, int targetX, int targetY, int durationMillis, int leftLimitX, int rightLimitX, int topLimitY, int bottomLimitY) {
-    	animate(currX, currY, targetX, targetY, durationMillis, leftLimitX, rightLimitX, topLimitY, bottomLimitY, FRAME_MILLIS);
+        animate(currX, currY, targetX, targetY, durationMillis, leftLimitX, rightLimitX, topLimitY, bottomLimitY, FRAME_MILLIS);
     }
-    
+
     public void animate(int currX, int currY, int targetX, int targetY, int durationMillis, int leftLimitX, int rightLimitX, int topLimitY, int bottomLimitY, int frameTime) {
         if (currY == targetY && currX == targetX) {
             return;
@@ -42,7 +42,7 @@ public class AnimationThread implements Runnable {
         this.rightLimitX = rightLimitX * FP_MATH_MULTIPLIER;
         this.topLimitY = topLimitY * FP_MATH_MULTIPLIER;
         this.bottomLimitY = bottomLimitY * FP_MATH_MULTIPLIER;
-        
+
         x = currX * FP_MATH_MULTIPLIER;
         y = currY * FP_MATH_MULTIPLIER;
         this.targetX = targetX * FP_MATH_MULTIPLIER;
@@ -50,16 +50,16 @@ public class AnimationThread implements Runnable {
 
         framesCount = durationMillis / frameTime;
         if (framesCount == 0) {
-        	onStep(this.targetX, this.targetY);
-        	return;
+            onStep(this.targetX, this.targetY);
+            return;
         }
 
         int sX = this.targetX - x;
         int sY = this.targetY - y;
-        
+
         vX = 2*sX/(framesCount);
         vY = 2*sY/(framesCount);
-        
+
         aX = 2*sX/(framesCount*framesCount);
         aY = 2*sY/(framesCount*framesCount);
 
@@ -78,7 +78,7 @@ public class AnimationThread implements Runnable {
 
         this.targetX = Mathh.constrain(this.leftLimitX, this.targetX, this.rightLimitX);
         this.targetY = Mathh.constrain(this.topLimitY, this.targetY, this.bottomLimitY);
-        
+
         if (!isRunning) {
             thread = new Thread(this);
             thread.start();

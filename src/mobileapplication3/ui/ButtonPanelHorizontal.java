@@ -13,7 +13,7 @@ import mobileapplication3.platform.ui.RootContainer;
  */
 public class ButtonPanelHorizontal extends AbstractButtonSet {
     public static final int H_AUTO = -1;
-    
+
     private int rows, btnH;
     private ButtonRow[] buttonRows = new ButtonRow[0];
     private int btnsInRow;
@@ -28,12 +28,12 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         initRows();
         return super.setButtons(buttons);
     }
-    
+
     private void initRows() {
         if (buttons == null) {
             return;
         }
-        
+
         buttonRows = new ButtonRow[rows];
 
         for (int i = 0; i < rows; i++) {
@@ -43,7 +43,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         }
         super.setButtons(buttons);
     }
-    
+
     public IUIComponent setSizes(int w, int h, int btnH) {
         return setSizes(w, h, btnH, false);
     }
@@ -52,11 +52,11 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         if (buttons == null) {
             return this;
         }
-        
+
         this.w = w;
         this.h = h;
         this.btnH = btnH;
-        
+
         if (this.btnH == H_AUTO) {
             if (this.h == H_AUTO || trimHeight) {
                 this.btnH = Font.getDefaultFont().getHeight() * 5 / 2;// + buttonsBgPadding*2;
@@ -69,17 +69,17 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         } else {
             this.h = Math.min(this.h, this.btnH * rows);
         }
-        
+
         if (h == H_AUTO) {
             this.h = rows * this.btnH;
         }
-        
+
         setPos(x0, y0, anchor);
         return super.setSize(this.w, this.h);
     }
 
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-    	int btnH = h / rows;
+        int btnH = h / rows;
         for (int i = 0; i < rows; i++) {
             buttonRows[i].paint(g, x0, y0 + btnH*i, w, btnH, forceInactive);
         }
@@ -89,20 +89,20 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         if (!checkTouchEvent(x, y)) {
             return false;
         }
-        
+
         for (int i = 0; i < buttonRows.length; i++) {
             if (buttonRows[i].handlePointerClicked(x, y)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
     public boolean onKeyPressed(int keyCode, int count) {
         if (keyCode >= 49 && keyCode <= 57) {
             int i = keyCode - 49;
-            
+
             if (i < buttons.length) {
                 setIsSelectionVisible(true);
                 selected = i;
@@ -110,11 +110,11 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
                 return true;
             }
         }
-        
+
         if (!isVisible) {
             return false;
         }
-        
+
         setIsSelectionVisible(true);
         switch (keyCode) {
             default:
@@ -154,13 +154,13 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
                         return isFocused;
                 }
         }
-        
+
         selected = Mathh.constrain(0, selected, buttons.length - 1); // TODO fix this mess
         buttonRows[selectedRow].setIsSelectionVisible(false);
         selectedRow = Mathh.constrain(0, selected / btnsInRow, rows - 1);
         buttonRows[selectedRow].setIsSelectionVisible(true);
         buttonRows[selectedRow].setSelected(selected % btnsInRow);
-        
+
 
         if (isSelectionEnabled) {
             isSelectionVisible = true;
@@ -177,32 +177,32 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         } else {
             rows = buttonsNumber / btnsInRow;
         }
-        
+
         if (isSizeSet()) {
             setSize(w, btnH*rows);
         }
-        
+
         return this;
     }
-    
+
     public AbstractButtonSet setIsSelectionVisible(boolean isSelectionVisible) {
         if (buttonRows != null && buttonRows.length > selectedRow && buttonRows[selectedRow] != null) {
             buttonRows[selectedRow].setIsSelectionVisible(isSelectionVisible);
         }
         return super.setIsSelectionVisible(isSelectionVisible);
     }
-    
+
     public AbstractButtonSet setIsSelectionEnabled(boolean selectionEnabled) {
-    	super.setIsSelectionEnabled(selectionEnabled);
-    	for (int i = 0; i < buttonRows.length; i++) {
-			buttonRows[i].setIsSelectionEnabled(selectionEnabled);
-		}
-    	return this;
+        super.setIsSelectionEnabled(selectionEnabled);
+        for (int i = 0; i < buttonRows.length; i++) {
+            buttonRows[i].setIsSelectionEnabled(selectionEnabled);
+        }
+        return this;
     }
-    
+
     protected void onSetBounds(int x0, int y0, int w, int h) {
         initRows();
-        
+
         for (int i = 0; i < rows; i++) {
             buttonRows[i]
                         .setSize(this.w, this.btnH)

@@ -8,7 +8,7 @@ package mobileapplication3.ui;
  */
 public class FileManager extends Container {
     /*private String currentFolder = null;
-    
+
     public void openFolder() {
         (new Thread(new Runnable() {
             public void run() {
@@ -18,15 +18,15 @@ public class FileManager extends Container {
             }
         })).start();
     }
-    
+
     public void saveAs(String fileName) {
-        
+
     }
-    
+
     public void saveAs(String initialPath, String fileName) {
-        
+
     }
-    
+
     public void openFile(final String initialPath) {
         (new Thread(new Runnable() {
             public void run() {
@@ -38,10 +38,10 @@ public class FileManager extends Container {
             }
         })).start();
     }
-    
+
     private void getNewList() {
         title.setText(currentFolder);
-        
+
         (new Thread(new Runnable() {
             public void run() {
                 try {
@@ -52,7 +52,7 @@ public class FileManager extends Container {
             }
         })).start();
     }
-    
+
     private void pickPath(String path) {
         pickedPath = path;
         if (!fileName.equals("")) {
@@ -61,7 +61,7 @@ public class FileManager extends Container {
             question.setText("");
         }
     }
-    
+
     private void setPaths(String[] paths) {
         Button[] listButtons = new Button[paths.length];
         for (int i = 0; i < paths.length; i++) {
@@ -80,7 +80,7 @@ public class FileManager extends Container {
                         if (currentTarget == TARGET_OPEN) {
                             fileName = name;
                         }
-                        
+
                         pickPath(currentFolder + name);
                     }
                 }
@@ -88,7 +88,7 @@ public class FileManager extends Container {
         }
         setListButtons(listButtons);
     }
-    
+
     private void setListButtons(Button[] buttons) {
         list.setButtons(buttons).setParent(this);
         setSize(w, h);

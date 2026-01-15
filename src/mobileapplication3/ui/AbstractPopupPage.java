@@ -30,5 +30,5 @@ public abstract class AbstractPopupPage extends Page {
     protected void close() {
         feedback.closePopup();
     }
-    
+
 }

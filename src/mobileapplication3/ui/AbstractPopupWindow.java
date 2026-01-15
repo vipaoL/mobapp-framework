@@ -29,5 +29,5 @@ public abstract class AbstractPopupWindow extends Container {
     protected void close() {
         feedback.closePopup();
     }
-    
+
 }

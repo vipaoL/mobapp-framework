@@ -109,7 +109,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
         if (!isVisible) {
             return;
         }
-        
+
         if (w == 0 || h == 0) {
             try {
                 throw new Exception("Can't paint: w=" + w + " h=" + h + " " + getClass().getName());
@@ -144,9 +144,9 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
 
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
-    
+
     private final void onPaint(Graphics g, boolean forceInactive) {
-    	onPaint(g, x0, y0, w, h, forceInactive);
+        onPaint(g, x0, y0, w, h, forceInactive);
     }
 
     protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
@@ -254,7 +254,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handlePointerClicked(int x, int y) {
-    	return false;
+        return false;
     };
 
     public final boolean pointerReleased(int x, int y) {
@@ -275,7 +275,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handlePointerReleased(int x, int y) {
-    	return false;
+        return false;
     };
 
     public final boolean pointerDragged(int x, int y) {
@@ -300,7 +300,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handlePointerDragged(int x, int y) {
-    	return false;
+        return false;
     };
 
     public final boolean pointerPressed(int x, int y) {
@@ -324,7 +324,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handlePointerPressed(int x, int y) {
-    	return false;
+        return false;
     };
 
     public final boolean mouseEvent(int event, int x, int y) {
@@ -363,7 +363,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handleKeyPressed(int keyCode, int count) {
-    	return false;
+        return false;
     };
 
     public final boolean keyReleased(int keyCode, int count) {
@@ -381,7 +381,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handleKeyReleased(int keyCode, int count) {
-    	return false;
+        return false;
     }
 
     public final boolean keyRepeated(int keyCode, int pressedCount) {
@@ -399,7 +399,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     }
 
     protected boolean handleKeyRepeated(int keyCode, int pressedCount) {
-    	return false;
+        return false;
     };
 
     public void onShow() { }
@@ -538,9 +538,9 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             }
         }
     }
-    
+
     public boolean isOnScreen() {
-    	return hasParent() && parent.isOnScreen();
+        return hasParent() && parent.isOnScreen();
     }
 
     protected abstract void onSetBounds(int x0, int y0, int w, int h);

@@ -12,26 +12,26 @@ import mobileapplication3.platform.ui.RootContainer;
  * @author vipaol
  */
 public class ButtonRow extends AbstractButtonSet {
-    
+
     private int leftSoftBindIndex = NOT_SET;
     private int rightSoftBindIndex = NOT_SET;
-    
+
     public ButtonRow() { }
-    
+
     public ButtonRow(Button[] buttons) {
         this.buttons = buttons;
     }
-    
+
     public ButtonRow bindToSoftButtons() {
-    	return bindToSoftButtons(0, buttons.length - 1);
+        return bindToSoftButtons(0, buttons.length - 1);
     }
-    
+
     public ButtonRow bindToSoftButtons(int leftSoftBindIndex, int rightSoftBindIndex) {
         this.leftSoftBindIndex = leftSoftBindIndex;
         this.rightSoftBindIndex = rightSoftBindIndex;
         return this;
     }
-    
+
     public int getMinPossibleWidth() { // need fix
         int res = 0;
         for (int i = 0; i < buttons.length; i++) {
@@ -58,25 +58,25 @@ public class ButtonRow extends AbstractButtonSet {
         if (buttons.length == 0) {
             return false;
         }
-        
+
         if (!checkTouchEvent(x, y)) {
             return false;
         }
-        
+
         x -= x0;
         y -= y0;
-        
+
         int i = x * buttons.length / w;
         boolean wasSelected = (i == selected && isSelectionEnabled);
         if (isSelectionEnabled) {
-        	setSelected(i);
+            setSelected(i);
         }
-        
+
         return buttons[i].invokePressed(wasSelected, isFocused);
     }
-    
+
     protected boolean handleBindsOnKeyPressed(int keyCode) {
-    	switch (keyCode) {
+        switch (keyCode) {
         case KEYCODE_LEFT_SOFT:
             if (leftSoftBindIndex != NOT_SET) {
                 return buttons[leftSoftBindIndex].invokePressed(selected == leftSoftBindIndex, isFocused);
@@ -85,34 +85,34 @@ public class ButtonRow extends AbstractButtonSet {
             if (rightSoftBindIndex != NOT_SET) {
                 return buttons[rightSoftBindIndex].invokePressed(selected == rightSoftBindIndex, isFocused);
             }
-    	}
-    	return super.handleBindsOnKeyPressed(keyCode);
+        }
+        return super.handleBindsOnKeyPressed(keyCode);
     }
 
     public boolean onKeyPressed(int keyCode, int count) {
         if (!isVisible) {
             return false;
         }
-        
+
         //setIsSelectionEnabled(true);
         switch (keyCode) {
             default:
-            	if (!isSelectionEnabled) {
-            		return false;
-            	}
+                if (!isSelectionEnabled) {
+                    return false;
+                }
                 switch (RootContainer.getAction(keyCode)) {
                     case Keys.LEFT:
-                    	if (selected > 0) {
+                        if (selected > 0) {
                             setSelected(selected-1);
                         } else {
-                        	setSelected(buttons.length - 1);
+                            setSelected(buttons.length - 1);
                         }
                         break;
                     case Keys.RIGHT:
-                    	if (selected < buttons.length - 1) {
-                        	setSelected(selected+1);
+                        if (selected < buttons.length - 1) {
+                            setSelected(selected+1);
                         } else {
-                        	setSelected(0);
+                            setSelected(0);
                         }
                         break;
                     case Keys.FIRE:
@@ -121,14 +121,14 @@ public class ButtonRow extends AbstractButtonSet {
                         return isFocused;
                 }
         }
-        
+
         // scrolling is not implemented for rows (maybe yet)
 //        int selectedH = btnH * selected;
 //        if (selectedH - btnH < scrollOffset) {
 //            initAnimationThread();
 //            animationThread.animate(0, scrollOffset, 0, Math.max(0, selectedH - btnH * 3 / 4), 200);
 //        }
-//        
+//
 //        if (selectedH + btnH > scrollOffset + h) {
 //            initAnimationThread();
 //            animationThread.animate(0, scrollOffset, 0, Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4), 200);
@@ -137,10 +137,10 @@ public class ButtonRow extends AbstractButtonSet {
         if (isSelectionEnabled) {
             isSelectionVisible = true;
         }
-        
+
         return true;
     }
-    
+
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (buttons == null || buttons.length == 0) {
             return;

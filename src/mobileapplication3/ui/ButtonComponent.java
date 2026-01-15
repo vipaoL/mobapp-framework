@@ -12,7 +12,7 @@ import mobileapplication3.platform.ui.RootContainer;
  * @author vipaol
  */
 public class ButtonComponent extends AbstractButtonSet {
-	
+
     public ButtonComponent(Button button) {
         this.buttons = new Button[]{button};
     }
@@ -25,7 +25,7 @@ public class ButtonComponent extends AbstractButtonSet {
         }
         return res;
     }
-    
+
     public void onSetBounds(int x0, int y0, int w, int h) {
         if (w == W_AUTO) {
             this.w = getMinPossibleWidth();
@@ -36,7 +36,7 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-    	boolean drawAsSelected = isSelectionVisible && isFocused;
+        boolean drawAsSelected = isSelectionVisible && isFocused;
         buttons[0].paint(g, x0, y0, w, h, drawAsSelected, isFocused, forceInactive, showKbHints);
     }
 
@@ -53,27 +53,27 @@ public class ButtonComponent extends AbstractButtonSet {
             buttons[0].invokePressed(true, true);
             return true;
         } else {
-        	return isFocused;
+            return isFocused;
         }
     }
-    
+
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
-		return false;
-	}
-    
+        return false;
+    }
+
     public IUIComponent setBgColor(int color) {
-    	buttons[0].setBgColor(color);
-    	return this;
+        buttons[0].setBgColor(color);
+        return this;
     }
-    
+
     public ButtonComponent setBindedKeyCode(int keyCode) {
-    	buttons[0].setBindedKeyCode(keyCode);
-    	return this;
+        buttons[0].setBindedKeyCode(keyCode);
+        return this;
     }
-    
+
     public ButtonComponent setBindedKeyCodes(int[] keyCodes) {
-    	buttons[0].setBindedKeyCodes(keyCodes);
-    	return this;
+        buttons[0].setBindedKeyCodes(keyCodes);
+        return this;
     }
-    
+
 }
