@@ -2,7 +2,6 @@
 
 package mobileapplication3.ui;
 
-import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.Mathh;
 
 /**
