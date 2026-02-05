@@ -90,15 +90,15 @@ public class ButtonCol extends AbstractButtonSet {
                 }
             }
         } else {
-            this.h = Math.min(this.h, this.btnH * buttons.length);
+            this.h = Math.min(this.h, getTotalBtnsH() + padding * 2);
         }
 
         if (this.h == H_AUTO) {
-            this.h = buttons.length * this.btnH;
+            this.h = getTotalBtnsH() + padding * 2;
         }
 
         if (this.trimHeight) {
-            this.h = Math.min(this.h, this.btnH * buttons.length);
+            this.h = Math.min(this.h, getTotalBtnsH() + padding * 2);
         }
 
         if (startFromBottom) {
@@ -125,7 +125,7 @@ public class ButtonCol extends AbstractButtonSet {
                 res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[i].getBgPagging()*4);
             }
         }
-        return res;
+        return res + padding * 2;
     }
 
     public int getBtnH() {
@@ -151,9 +151,9 @@ public class ButtonCol extends AbstractButtonSet {
         }
         if (kbSmoothScrolling && scrollOffset != this.scrollOffset) {
             initAnimationThread();
-            animationThread.animate(0, this.scrollOffset, 0, scrollOffset, 200, 0, 0, 0, btnH*buttons.length - h);
+            animationThread.animate(0, this.scrollOffset, 0, scrollOffset, 200, 0, 0, 0, getMaxScrollOffset());
         } else {
-            this.scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - h));
+            this.scrollOffset = Math.max(0, Math.min(scrollOffset, getMaxScrollOffset()));
         }
         return true;
     }
@@ -193,7 +193,7 @@ public class ButtonCol extends AbstractButtonSet {
 
         targetY -= dY * Mathh.sign(draggedAvgDY);
         int topLimitY = 0;
-        int bottomLimitY = getTotalBtnsH() - h;
+        int bottomLimitY = getMaxScrollOffset();
 
         if (kineticTouchScrolling && targetY != startY) {
             initAnimationThread();
@@ -254,7 +254,7 @@ public class ButtonCol extends AbstractButtonSet {
 
         scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
 
-        scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - h));
+        scrollOffset = Math.max(0, Math.min(scrollOffset, getMaxScrollOffset()));
 
         lastDraggedDY = y - lastDraggedY;
         lastDraggedY = y;
@@ -275,6 +275,10 @@ public class ButtonCol extends AbstractButtonSet {
         }
 
         return true;
+    }
+
+    private int getMaxScrollOffset() {
+        return getTotalBtnsH() - (h - padding * 2);
     }
 
     public boolean onKeyPressed(int keyCode, int count) {
@@ -331,7 +335,7 @@ public class ButtonCol extends AbstractButtonSet {
         int startY = scrollOffset;
         int targetY = scrollOffset;
         int topLimitY = 0;
-        int bottomLimitY = btnH * buttons.length - h;
+        int bottomLimitY = getMaxScrollOffset();
         if (btnH * 2 < h) {
             if (selectedY < scrollOffset) {
                 targetY = Math.max(topLimitY, selectedY - btnH * 3 / 4);

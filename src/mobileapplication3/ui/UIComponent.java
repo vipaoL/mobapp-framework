@@ -19,7 +19,7 @@ public abstract class UIComponent implements IUIComponent {
     private boolean isSizeSet = false;
     protected int bgColor = COLOR_TRANSPARENT;
     private boolean roundBg = true;
-    private int padding;
+    protected int padding;
     private IContainer parent = null;
 
     public final void paint(Graphics g) {

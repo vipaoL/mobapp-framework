@@ -198,10 +198,13 @@ public abstract class Button {
 
         x0 += bgPadding;
         clipX += bgPadding;
-        y0 += bgPadding;
         w -= bgPadding*2;
         clipW -= bgPadding*2;
+        y0 += bgPadding;
+        clipY += bgPadding;
         h -= bgPadding*2;
+        clipH -= bgPadding*2;
+
         if (w <= 0 || h <= 0) {
             return;
         }
