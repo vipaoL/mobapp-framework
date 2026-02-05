@@ -117,7 +117,7 @@ public abstract class UIComponent implements IUIComponent {
         return this;
     }
 
-    public boolean getIsVisible() {
+    public boolean isVisible() {
         return isVisible;
     }
 

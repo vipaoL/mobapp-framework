@@ -337,7 +337,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return isVisible;
     }
 
-    public boolean getIsVisible() {
+    public boolean isVisible() {
         return isVisible;
     }
 

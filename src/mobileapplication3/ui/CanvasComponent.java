@@ -212,7 +212,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
         return isVisible;
     }
 
-    public final boolean getIsVisible() {
+    public final boolean isVisible() {
         return isVisible;
     }
 

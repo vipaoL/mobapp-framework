@@ -45,7 +45,7 @@ public interface IUIComponent {
     public IUIComponent setBgColor(int color);
     public IUIComponent setPadding(int padding);
     public IUIComponent roundBg(boolean b);
-    public boolean getIsVisible();
+    public boolean isVisible();
     public boolean repaintOnlyOnFlushGraphics();
     public void paint(Graphics g);
     public void paint(Graphics g, int x0, int y0, int w, int h);
