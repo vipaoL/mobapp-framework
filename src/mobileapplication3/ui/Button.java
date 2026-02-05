@@ -111,7 +111,7 @@ public abstract class Button {
         return this;
     }
 
-    public int getSelectedColor() {
+    public int getBgColorSelected() {
         return selectedBgColor;
     }
 
@@ -280,12 +280,12 @@ public abstract class Button {
         int bgColor;
         if (isActive && !forceInactive) {
             if (!isSelected) {
-                bgColor = this.bgColor;
+                bgColor = getBgColor();
             } else {
-                bgColor = selectedBgColor;
+                bgColor = getBgColorSelected();
             }
         } else {
-            bgColor = bgColorInactive;
+            bgColor = getBgColorInactive();
         }
 
         if (bgColor > 0) {
@@ -297,9 +297,9 @@ public abstract class Button {
 
     protected int getCurrentFontColor(boolean forceInactive) {
         if (isActive && !forceInactive) {
-            return this.fontColor;
+            return getFontColor();
         } else {
-            return fontColorInactive;
+            return getFontColorInactive();
         }
     }
 
