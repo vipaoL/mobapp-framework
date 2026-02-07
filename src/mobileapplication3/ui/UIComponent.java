@@ -193,10 +193,15 @@ public abstract class UIComponent implements IUIComponent {
             return;
         }
 
-        prevW = this.w = w;
-        prevH = this.h = h;
-        prevX0 = this.x0 = x0;
-        prevY0 = this.y0 = y0;
+        prevW = this.w;
+        prevH = this.h;
+        prevX0 = this.x0;
+        prevY0 = this.y0;
+
+        this.w = w;
+        this.h = h;
+        this.x0 = x0;
+        this.y0 = y0;
 
         onSetBounds(x0, y0, w, h);
         isSizeSet = true;

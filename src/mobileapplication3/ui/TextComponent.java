@@ -28,7 +28,6 @@ public class TextComponent extends UIComponent {
 
     public TextComponent() {
         font = Font.getDefaultFont();
-        //setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_LARGE));
         prevGetLineBoundsFont = font;
         padding = font.getHeight()/6;
         bgColor = COLOR_ACCENT;

@@ -260,13 +260,16 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             }
         }
 
-        if (bg != null) {
+        if (bg != null && bg.getWidth() == w && bg.getHeight() == h) {
             g.drawImage(bg, x0 + w/2, y0 + h/2, Graphics.VCENTER | Graphics.HCENTER);
         }
     }
 
     public IUIComponent refreshSizes() {
-        setSize(w++ /* bypass the check (prevW == w) to force refresh */, h);
+        // bypass the check to force refresh
+        int w = this.w;
+        setSize(w + 1, h);
+        setSize(w, h);
         return this;
     }
 
@@ -322,7 +325,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public IUIComponent setActive(boolean b) {
-        //System.out.println(getClass().getName() + " setActive: " + b);
         isActive = b;
         for (int i = 0; i < components.length; i++) {
             if (components[i] != null) {
@@ -663,8 +665,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
 
         if (this.w == w && this.h == h) {
-            Logger.log(w + " " + h + " has not changed (" + getClass().getName() + ")");
+            Logger.log(w + "x" + h + " has not changed (" + getClass().getName() + ")");
             return this;
+        } else {
+            Logger.log(w + "x" + h + " - new size (" + getClass().getName() + ")");
         }
 
         setBounds(x0, y0, w, h);
@@ -690,17 +694,15 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             popupWindow.setSize(w, h).setPos(x0, y0, LEFT | TOP);
         }
 
-        if (prevW != 0 && prevH != 0 && w != prevW && h != prevH) {
-            bg = null;
-            if (bgColor == COLOR_TRANSPARENT) {
-                bgColor = 0;
-            }
-        }
+        prevW = this.w;
+        prevH = this.h;
+        prevX0 = this.x0;
+        prevY0 = this.y0;
 
-        prevW = this.w = w;
-        prevH = this.h = h;
-        prevX0 = this.x0 = x0;
-        prevY0 = this.y0 = y0;
+        this.w = w;
+        this.h = h;
+        this.x0 = x0;
+        this.y0 = y0;
 
         onSetBounds(x0, y0, w, h);
     }
@@ -796,6 +798,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return hasParent() && parent.isOnScreen();
     }
 
+    // TODO: remove arguments. The dimensions are already set before, in setBounds()
     protected abstract void onSetBounds(int x0, int y0, int w, int h);
 
 }

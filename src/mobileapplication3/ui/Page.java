@@ -35,10 +35,6 @@ public abstract class Page extends Container {
         setComponents(new IUIComponent[]{title, pageContent, actionButtons});
     }
 
-    public boolean keyPressed(int keyCode, int count) {
-        return super.keyPressed(keyCode, count);
-    }
-
     public final void onSetBounds(int x0, int y0, int w, int h) {
         if (!isInited) {
             try {

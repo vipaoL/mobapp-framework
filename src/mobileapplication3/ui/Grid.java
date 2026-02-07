@@ -12,9 +12,7 @@ import mobileapplication3.platform.ui.RootContainer;
  * @author vipaol
  */
 public class Grid extends UIComponent implements IContainer {
-
-
-    //public static final int W_AUTO = -1;
+    //public static final int W_AUTO = -1; // Not supported yet
     public static final int H_AUTO = -1;
 
     public IUIComponent[] elements = null;
@@ -35,7 +33,7 @@ public class Grid extends UIComponent implements IContainer {
 
     private boolean isScrollable = true;
     private boolean trimHeight = true, autoElemH = false;
-    private int hBeforeTrim, prevTotalelemsH;
+    private int hBeforeTrim, prevTotalElementsH;
     private int scrollOffset = 0;
     protected int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
     protected int lastDraggedY, lastDraggedDY, draggedAvgDY;
@@ -118,9 +116,9 @@ public class Grid extends UIComponent implements IContainer {
         }
 
         if (startFromBottom) {
-            int dteh = getTotalElemsH() - prevTotalelemsH;
+            int dteh = getTotalElemsH() - prevTotalElementsH;
             int dh = this.h - prevH;
-            prevTotalelemsH = getTotalElemsH();
+            prevTotalElementsH = getTotalElemsH();
 
             scrollOffset += dteh - dh;
 
