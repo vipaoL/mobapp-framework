@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.Mathh;
 import mobileapplication3.platform.Utils;
 import mobileapplication3.platform.ui.Font;
@@ -13,7 +14,6 @@ import mobileapplication3.platform.ui.RootContainer;
  * @author vipaol
  */
 public class ButtonCol extends AbstractButtonSet {
-
     private AnimationThread animationThread = null;
     private int btnH = H_AUTO;
 
@@ -62,7 +62,7 @@ public class ButtonCol extends AbstractButtonSet {
             try {
                 throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return this;
         }

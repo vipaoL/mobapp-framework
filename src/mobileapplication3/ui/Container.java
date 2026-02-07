@@ -83,7 +83,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             onPaint(capture.getGraphics(), true);
             return capture;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
             return null;
         }
     }
@@ -133,7 +133,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new IllegalStateException("No components in the container. Did you forgot to call setComponents()? " + getClass().getName());
             } catch (IllegalStateException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
         return components;
@@ -192,7 +192,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new Exception("Can't paint: w=" + w + " h=" + h + " " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return;
         }
@@ -389,7 +389,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
 
         return false;
@@ -429,7 +429,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
 
         return false;
@@ -475,7 +475,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
         return false;
     }
@@ -509,7 +509,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
         return false;
     }
@@ -538,7 +538,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
         return false;
     }
@@ -564,7 +564,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
 
         return false;
@@ -591,7 +591,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
 
         return false;
@@ -618,7 +618,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
         return false;
     }
@@ -723,7 +723,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new IllegalStateException(getClass().getName() + " has no parent and can't get UI settings");
             } catch (IllegalStateException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return null;
         }
@@ -740,7 +740,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }
@@ -752,7 +752,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
                 return null;
             }
         }
@@ -765,7 +765,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }

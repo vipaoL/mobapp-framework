@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.Mathh;
 import mobileapplication3.platform.ui.Font;
 import mobileapplication3.platform.ui.Graphics;
@@ -84,7 +85,7 @@ public class Grid extends UIComponent implements IContainer {
             try {
                 throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return this;
         }

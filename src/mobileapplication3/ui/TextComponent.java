@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.ui.Font;
 import mobileapplication3.platform.ui.Graphics;
 
@@ -10,7 +11,6 @@ import mobileapplication3.platform.ui.Graphics;
  * @author vipaol
  */
 public class TextComponent extends UIComponent {
-
     public static final int HEIGHT_AUTO = -1, FONT_SIZE_AUTO = -1;
     private String text = null;
     private int fontColor;
@@ -187,7 +187,7 @@ public class TextComponent extends UIComponent {
                             Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
                         }
                     } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        Logger.log(ex);
                     }
                     scrollAnimThread = null;
                 }

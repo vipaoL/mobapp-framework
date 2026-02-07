@@ -2,13 +2,14 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
+
 /**
  *
  * @author vipaol
  */
 public abstract class Page extends Container {
-
-    protected TextComponent title = null;
+    protected TextComponent title;
     protected IUIComponent pageContent = null;
     protected ButtonRow actionButtons;
     protected int margin;
@@ -40,7 +41,7 @@ public abstract class Page extends Container {
             try {
                 throw new IllegalStateException("Error: init() hadn't done! " + getClass().getName());
             } catch (IllegalStateException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
 

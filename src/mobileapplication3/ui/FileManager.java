@@ -47,7 +47,7 @@ public class FileManager extends Container {
                 try {
                     setPaths(FileUtils.list(currentFolder));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Logger.log(ex);
                 }
             }
         })).start();

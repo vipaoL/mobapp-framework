@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.ui.Graphics;
 
 /**
@@ -176,7 +177,7 @@ public abstract class UIComponent implements IUIComponent {
             try {
                 throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return this;
         }
@@ -272,7 +273,7 @@ public abstract class UIComponent implements IUIComponent {
             try {
                 throw new IllegalStateException(getClass().getName() + " has no parent and can't get UI settings");
             } catch (IllegalStateException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return null;
         }
@@ -285,7 +286,7 @@ public abstract class UIComponent implements IUIComponent {
             try {
                 throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }
@@ -297,7 +298,7 @@ public abstract class UIComponent implements IUIComponent {
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
                 return null;
             }
         }
@@ -310,7 +311,7 @@ public abstract class UIComponent implements IUIComponent {
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }

@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
 import mobileapplication3.platform.ui.Graphics;
 import mobileapplication3.platform.ui.Image;
 
@@ -56,7 +57,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             onPaint(capture.getGraphics(), true);
             return capture;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
             return null;
         }
     }
@@ -114,7 +115,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new Exception("Can't paint: w=" + w + " h=" + h + " " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return;
         }
@@ -449,7 +450,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return;
         }
@@ -492,7 +493,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new IllegalStateException(getClass().getName() + " has no parent and can't get UI settings");
             } catch (IllegalStateException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
             return null;
         }
@@ -509,7 +510,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }
@@ -521,7 +522,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
                 return null;
             }
         }
@@ -534,7 +535,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             try {
                 throw new NullPointerException("Can't call parent's getGraphics: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                Logger.log(ex);
             }
         }
     }

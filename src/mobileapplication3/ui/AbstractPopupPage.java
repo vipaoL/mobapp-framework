@@ -2,6 +2,8 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Logger;
+
 /**
  *
  * @author vipaol
@@ -23,7 +25,7 @@ public abstract class AbstractPopupPage extends Page {
                 setBgImage(null);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.log(ex);
         }
     }
 
