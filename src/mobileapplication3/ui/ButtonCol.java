@@ -21,7 +21,7 @@ public class ButtonCol extends AbstractButtonSet {
     private boolean trimHeight = true;
     private int hBeforeTrim, btnHBeforeAuto = btnH, prevTotalBtnsH;
     private int scrollOffset = 0;
-    private int pointerPressedY, scrollOffsetWhenPressed;
+    private int pointerPressedY = -1, scrollOffsetWhenPressed;
     protected int lastDraggedY, lastDraggedDY, draggedAvgDY;
     protected long lastDraggedT;
     protected int lastDraggedDT, draggedAvgDT;
@@ -181,6 +181,10 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     protected boolean handlePointerReleased(int x, int y) {
+        if (pointerPressedY == -1) {
+            return false;
+        }
+
         int startY = scrollOffset;
         int targetY = scrollOffset;
 
@@ -200,6 +204,8 @@ public class ButtonCol extends AbstractButtonSet {
             int t = Math.min(2000, Math.abs(2 * dY * draggedAvgDT / draggedAvgDY));
             animationThread.animate(0, startY, 0, targetY, t, 0, 0, topLimitY, bottomLimitY, draggedAvgDT);
         }
+
+        pointerPressedY = -1;
 
         return true;
     }
@@ -236,6 +242,10 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     public boolean handlePointerDragged(int x, int y) {
+        if (pointerPressedY == -1) {
+            return false;
+        }
+
         if (!isVisible) {
             return false;
         }

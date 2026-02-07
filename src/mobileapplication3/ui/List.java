@@ -39,6 +39,8 @@ public class List extends UIComponent implements IContainer {
     private boolean isInited = false;
     protected boolean ignoreKeyRepeated = true;
 
+    protected IUIComponent draggedEventRecipient = null;
+
     public List() { }
 
     public List(IUIComponent[] elements) {
@@ -189,20 +191,13 @@ public class List extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerPressed(int x, int y) {
+        draggedEventRecipient = null;
         if (!isVisible) {
             return false;
         }
 
         if (elements == null || elements.length == 0) {
             return false;
-        }
-
-        if (!isScrollable) {
-            return false;
-        }
-
-        if (elemH*elements.length <= h) {
-            //return false;
         }
 
         if (!checkTouchEvent(x, y)) {
@@ -226,26 +221,37 @@ public class List extends UIComponent implements IContainer {
             return false;
         }
 
+        if (draggedEventRecipient != null) {
+            if (draggedEventRecipient != this) {
+                draggedEventRecipient.pointerDragged(x, y);
+                return true;
+            }
+        }
+
         if (elements == null || elements.length == 0) {
             return false;
         }
 
-        if (!isScrollable) {
-            return false;
-        }
-
-        if (elemH*elements.length <= h) {
-            //return false;
-        }
-
-        if (elements[selected].pointerDragged(x, y)) {
+        if (draggedEventRecipient != this && elements[selected].pointerDragged(x, y)) {
+            draggedEventRecipient = elements[selected];
             return true;
         }
+
+        int oldScrollOffset = scrollOffset;
 
         scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
 
         scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalElemsH() - h));
 
+        if (scrollOffset != oldScrollOffset) {
+            draggedEventRecipient = this;
+        }
+
+        return true;
+    }
+
+    public boolean pointerReleased(int x, int y) {
+        draggedEventRecipient = null;
         return true;
     }
 

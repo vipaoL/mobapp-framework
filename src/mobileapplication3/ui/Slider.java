@@ -18,6 +18,7 @@ public class Slider extends Container {
     private short maxValue;
     private int prevDraggedX;
     private long prevDraggedTime = 0;
+    private boolean isDraggedEventRecipient;
 
     public Slider(Property prop) {
         minValue = prop.getMinValue();
@@ -144,12 +145,14 @@ public class Slider extends Container {
         int dy = y - pressedY;
         int dt = (int) (System.currentTimeMillis() - prevDraggedTime);
 
-        if (Math.abs(dx) < Math.abs(dy * 5)) {
+        if (!isDraggedEventRecipient && Math.abs(dx) < Math.abs(dy * 5)) {
             prevDraggedX = x;
             // list scrolling handles the pointer event if false is returned
             // so scroll the list if the vertical movement is greater than the horizontal movement
             return false;
         }
+
+        isDraggedEventRecipient = true;
 
         if (dt != 0) {
             prevDraggedTime = System.currentTimeMillis();

@@ -318,7 +318,7 @@ public abstract class UIComponent implements IUIComponent {
     public void onHide() { }
 
     public boolean pointerReleased(int x, int y) {
-        if (!(isVisible && checkTouchEvent(x, y))) {
+        if (!isVisible) {
             return false;
         }
         return handlePointerReleased(x, y);
@@ -332,7 +332,7 @@ public abstract class UIComponent implements IUIComponent {
     }
 
     public boolean pointerDragged(int x, int y) {
-        if (!(isVisible && checkTouchEvent(x, y))) {
+        if (!isVisible) {
             return false;
         }
         return handlePointerDragged(x, y);

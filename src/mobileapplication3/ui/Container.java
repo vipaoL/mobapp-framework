@@ -26,6 +26,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     protected Image bg = null;
     private IUIComponent popupWindow = null;
     protected IContainer parent = null;
+    protected IUIComponent draggedEventRecipient = null;
     protected boolean repaintOnlyOnFlushGraphics = false;
     private boolean isCapturingForPopup = false;
 
@@ -393,6 +394,15 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerReleased(int x, int y) {
+        if (draggedEventRecipient != null) {
+            try {
+                draggedEventRecipient.pointerReleased(x, y);
+            } catch (Exception ex) {
+                Logger.log(ex);
+            }
+            draggedEventRecipient = null;
+            return true;
+        }
         if (!checkTouchEvent(x, y)) {
             return false;
         }
@@ -424,6 +434,15 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerDragged(int x, int y) {
+        if (draggedEventRecipient != null) {
+            try {
+                draggedEventRecipient.pointerDragged(x, y);
+            } catch (Exception ex) {
+                Logger.log(ex);
+            }
+            return true;
+        }
+
         if (!checkTouchEvent(x, y)) {
             return false;
         }
@@ -436,6 +455,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
             popupWindow.pointerDragged(x, y);
             if (isTarget) {
+                draggedEventRecipient = popupWindow;
                 return true;
             }
         }
@@ -448,6 +468,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].pointerDragged(x, y)) {
+                    draggedEventRecipient = uiComponents[i];
                     return true;
                 }
             }
@@ -458,6 +479,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerPressed(int x, int y) {
+        draggedEventRecipient = null;
         if (!checkTouchEvent(x, y)) {
             return false;
         }
