@@ -13,9 +13,9 @@ public class Slider extends Container {
     private ButtonRow buttonRow;
     private Property prop;
 
-    private short value;
-    private short minValue;
-    private short maxValue;
+    private int value;
+    private int minValue;
+    private int maxValue;
     private int prevDraggedX;
     private long prevDraggedTime = 0;
     private boolean isDraggedEventRecipient;
@@ -49,7 +49,7 @@ public class Slider extends Container {
         });
 
         setBgColor(COLOR_ACCENT);
-        setActive(!prop.isCalculated());
+        setActive(prop.isActive());
         roundBg(true);
 
         this.prop = prop;
@@ -124,7 +124,7 @@ public class Slider extends Container {
             .setPos(x0, y0, TOP | LEFT);
     }
 
-    public short getValue() {
+    public int getValue() {
         return prop.getValue();
     }
 
