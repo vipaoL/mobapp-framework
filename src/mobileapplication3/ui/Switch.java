@@ -15,7 +15,7 @@ public abstract class Switch extends Button {
     }
 
     protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
-        int switchH = h * 2 / 3;
+        int switchH = font.getHeight() * 3 / 2;
         int switchCenterX = x0 + w - switchH * 3 / 2;
         int switchW = switchH * 5 / 2;
 
