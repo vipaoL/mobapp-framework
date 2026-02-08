@@ -120,11 +120,19 @@ public class Mathh {
     }
 
     public static int constrain(int leftBound, int a, int rightBound) {
-        return Math.min(Math.max(leftBound, a), rightBound);
+        if (leftBound > rightBound) {
+            return a;
+        } else {
+            return Math.min(Math.max(leftBound, a), rightBound);
+        }
     }
 
     public static double constrain(double leftBound, double a, double rightBound) {
-        return Math.min(Math.max(leftBound, a), rightBound);
+        if (leftBound > rightBound) {
+            return a;
+        } else {
+            return Math.min(Math.max(leftBound, a), rightBound);
+        }
     }
 
     public static boolean isPointOnArc(int a, int startAngle, int arcAngle) {
