@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.Mathh;
 import mobileapplication3.platform.Utils;
 import mobileapplication3.platform.ui.Font;
 import mobileapplication3.platform.ui.Graphics;
@@ -238,6 +239,9 @@ public abstract class Button {
     }
 
     protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
+        drawText(g, text, x0, y0, w, h, 0, 0, isSelected, isFocused, forceInactive, showKbHints);
+    }
+    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, int centerOffsetX, int centerOffsetY, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
         Font prevFont = g.getFont();
         setFont(Font.getDefaultFontSize());
 
@@ -258,17 +262,21 @@ public abstract class Button {
 
         g.setColor(getCurrentFontColor(forceInactive));
 
-        int offset = 0;
         int step = font.getHeight() * 3 / 2;
         if (step * lineBounds.length > h - bgPadding * 2) {
             step = h / (lineBounds.length);
         }
 
-        offset += (h-step*(lineBounds.length - 1) - font.getHeight())/2;
+        int totalTextH = step * (lineBounds.length - 1) + font.getHeight();
+        int y = Mathh.constrain(0, (h - totalTextH) / 2 + centerOffsetY, h - totalTextH);
+
         for (int i = 0; i < lineBounds.length; i++) {
             int[] bounds = lineBounds[i];
-            g.drawSubstring(text, bounds[0], bounds[1], x0 + w/2, y0 + offset, Graphics.HCENTER | Graphics.TOP);
-            offset += step;
+            int lineWidth = font.substringWidth(text, bounds[0], bounds[1]);
+            int maxOffsetX = (w - lineWidth) / 2;
+            int textOffsetX = Mathh.constrain(-maxOffsetX, centerOffsetX, maxOffsetX);
+            g.drawSubstring(text, bounds[0], bounds[1], x0 + w/2 + textOffsetX, y0 + y, Graphics.HCENTER | Graphics.TOP);
+            y += step;
         }
 
         g.setFont(prevFont);
