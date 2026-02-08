@@ -12,7 +12,6 @@ import mobileapplication3.platform.ui.Graphics;
  * @author vipaol
  */
 public abstract class Button {
-
     private String text;
     private String kbHint = "";
     private boolean isActive = true;
@@ -33,7 +32,7 @@ public abstract class Button {
 
     public Button(String title) {
         setFont(Font.getDefaultFontSize());
-        this.bgPadding = 0;
+        setBgPadding(IUIComponent.NOT_SET);
         this.selectedBgColor = IUIComponent.BG_COLOR_SELECTED;
         this.fontColorInactive = IUIComponent.FONT_COLOR_INACTIVE;
         this.fontColor = IUIComponent.FONT_COLOR;
@@ -121,8 +120,14 @@ public abstract class Button {
         return this;
     }
 
-    public int getBgPagging() {
-        return bgPadding;
+    public int getBgPadding() {
+        if (bgPadding >= 0) {
+            return bgPadding;
+        } else if (font != null) {
+            return font.getHeight() / 16;
+        } else {
+            return 0;
+        }
     }
 
     public Button setBgPadding(int bgPadding) {
@@ -197,14 +202,15 @@ public abstract class Button {
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
 
+        int bgPadding = getBgPadding();
         x0 += bgPadding;
         clipX += bgPadding;
-        w -= bgPadding*2;
-        clipW -= bgPadding*2;
+        w -= bgPadding * 2;
+        clipW -= bgPadding * 2;
         y0 += bgPadding;
         clipY += bgPadding;
-        h -= bgPadding*2;
-        clipH -= bgPadding*2;
+        h -= bgPadding * 2;
+        clipH -= bgPadding * 2;
 
         if (w <= 0 || h <= 0) {
             return;
@@ -249,13 +255,13 @@ public abstract class Button {
             text += kbHint;
         }
 
-        int[][] lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
+        int[][] lineBounds = getLineBounds(text, font, w, getBgPadding(), showKbHints);
         if (h / lineBounds.length < font.getHeight()) {
             setFont(Font.SIZE_MEDIUM);
-            lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
+            lineBounds = getLineBounds(text, font, w, getBgPadding(), showKbHints);
             if (h / lineBounds.length < font.getHeight()) {
                 setFont(Font.SIZE_SMALL);
-                lineBounds = getLineBounds(text, font, w, bgPadding, showKbHints);
+                lineBounds = getLineBounds(text, font, w, getBgPadding(), showKbHints);
             }
         }
         setFont(font.getSize(), g);
@@ -263,7 +269,7 @@ public abstract class Button {
         g.setColor(getCurrentFontColor(forceInactive));
 
         int step = font.getHeight() * 3 / 2;
-        if (step * lineBounds.length > h - bgPadding * 2) {
+        if (step * lineBounds.length > h - getBgPadding() * 2) {
             step = h / (lineBounds.length);
         }
 
@@ -336,5 +342,4 @@ public abstract class Button {
     public void buttonPressedSelected() {
         buttonPressed();
     }
-
 }

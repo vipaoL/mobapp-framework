@@ -122,7 +122,7 @@ public class ButtonCol extends AbstractButtonSet {
         for (int i = 0; i < buttons.length; i++) {
             String[] btnTextLines = Utils.split(buttons[i].getTitle(), "\n");
             for (int j = 0; j < btnTextLines.length; j++) {
-                res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[i].getBgPagging()*4);
+                res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[i].getBgPadding()*4);
             }
         }
         return res + padding * 2;

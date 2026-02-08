@@ -21,7 +21,7 @@ public class ButtonComponent extends AbstractButtonSet {
         int res = 0;
         String[] btnTextLines = Utils.split(buttons[0].getTitle(), "\n");
         for (int j = 0; j < btnTextLines.length; j++) {
-            res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[0].getBgPagging()*4);
+            res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[0].getBgPadding()*4);
         }
         return res;
     }

@@ -38,7 +38,7 @@ public class ButtonRow extends AbstractButtonSet {
             String[] btnTextLines = Utils.split(buttons[i].getTitle(), "\n");
             int maxLineW = 0;
             for (int j = 0; j < btnTextLines.length; j++) {
-                maxLineW = Math.max(maxLineW, Font.getDefaultFont().stringWidth(btnTextLines[j] + "    ") + buttons[i].getBgPagging()*4);
+                maxLineW = Math.max(maxLineW, Font.getDefaultFont().stringWidth(btnTextLines[j] + "    ") + buttons[i].getBgPadding()*4);
             }
             res += maxLineW;
         }
