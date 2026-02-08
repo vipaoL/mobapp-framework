@@ -220,7 +220,7 @@ public abstract class Button {
         g.setClip(clipX, clipY, clipW, clipH);
 
         drawBg(g, clipX, clipY, clipW, clipH, isSelected, drawAsInactive);
-        drawText(g, text, x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
+        drawText(g, getTitle(), x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
         drawSelectionMark(g, clipX, clipY, clipW, clipH, isSelected, isFocused, drawAsInactive);
 
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
