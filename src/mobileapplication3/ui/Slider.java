@@ -3,6 +3,7 @@
 package mobileapplication3.ui;
 
 import mobileapplication3.platform.Mathh;
+import mobileapplication3.platform.Platform;
 import mobileapplication3.platform.ui.Graphics;
 import mobileapplication3.platform.ui.RootContainer;
 
@@ -162,9 +163,11 @@ public class Slider extends Container {
             setValue((value + dx * dx * dx / dt / w));
 
             if (value != prevValue) {
-                // Do not change prevDraggedX on small movements to allow set more precisely.
+                // Do not change prevDraggedX on small movements to allow more precise adjustment.
                 // On the next pointerDragged event, dx will be greater
                 prevDraggedX = x;
+
+                Platform.vibrate(1);
             }
         }
 
