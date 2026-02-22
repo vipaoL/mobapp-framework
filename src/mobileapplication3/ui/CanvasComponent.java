@@ -335,10 +335,8 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
 
         if (popupWindow != null) {
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
-            popupWindow.mouseEvent(event, x, y);
-            repaint();
             if (isTarget) {
-                return true;
+                return popupWindow.mouseEvent(event, x, y); // TODO
             }
         }
 
