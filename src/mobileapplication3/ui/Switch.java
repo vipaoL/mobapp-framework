@@ -5,11 +5,9 @@ package mobileapplication3.ui;
 import mobileapplication3.platform.ui.Graphics;
 
 public abstract class Switch extends Button {
-    private boolean value;
 
     public Switch(String title) {
         super(title);
-        value = getValue();
     }
 
     protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
@@ -30,6 +28,8 @@ public abstract class Switch extends Button {
         int switchY0 = y0 + (h - switchH) / 2;
 
         int switchColor = isActive() ? fontColor : fontColorInactive;
+
+        boolean value = getValue();
 
         // outline
         int outlineThickness = Math.max(1, font.getHeight() / 20);
@@ -63,8 +63,7 @@ public abstract class Switch extends Button {
     }
 
     public void buttonPressed() {
-        value = !value;
-        setValue(value);
+        setValue(!getValue());
     }
 
     public abstract boolean getValue();

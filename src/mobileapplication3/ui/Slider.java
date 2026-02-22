@@ -8,28 +8,22 @@ import mobileapplication3.platform.ui.Graphics;
 import mobileapplication3.platform.ui.RootContainer;
 
 public class Slider extends Container {
-
     private TextComponent title;
     private TextComponent valueIndicator;
     private ButtonRow buttonRow;
     private Property prop;
 
-    private int value;
-    private int minValue;
-    private int maxValue;
     private int prevDraggedX;
     private long prevDraggedTime = 0;
     private boolean isDraggedEventRecipient;
 
     public Slider(Property prop) {
-        minValue = prop.getMinValue();
-        maxValue = prop.getMaxValue();
+        this.prop = prop;
 
         title = new TextComponent(prop.getName());
         title.setBgColor(COLOR_TRANSPARENT);
 
-        value = prop.getValue();
-        valueIndicator = new TextComponent(String.valueOf(value));
+        valueIndicator = new TextComponent(String.valueOf(prop.getValue()));
         valueIndicator.setBgColor(COLOR_TRANSPARENT);
 
         buttonRow = new ButtonRow();
@@ -52,8 +46,6 @@ public class Slider extends Container {
         setBgColor(COLOR_ACCENT);
         setActive(prop.isActive());
         roundBg(true);
-
-        this.prop = prop;
     }
 
     public void init() {
@@ -68,7 +60,14 @@ public class Slider extends Container {
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
 
-        int sliderFilledW = w * (value - minValue) / (maxValue - minValue);
+        int min = prop.getMinValue();
+        int max = prop.getMaxValue();
+        int value = prop.getValue();
+        int sliderFilledW = 0;
+        if (max > min) {
+            sliderFilledW = w * (value - min) / (max - min);
+        }
+
         int roundingD = Math.min(w/5, h/5);
 
         // background
@@ -125,14 +124,14 @@ public class Slider extends Container {
             .setPos(x0, y0, TOP | LEFT);
     }
 
-    public int getValue() {
+    public final int getValue() {
         return prop.getValue();
     }
 
-    public void setValue(int value) {
-        this.value = (short) Mathh.constrain(minValue, value, maxValue);
-        prop.setValue(this.value);
-        valueIndicator.setText(String.valueOf(this.value));
+    public final void setValue(int value) {
+        value = Mathh.constrain(prop.getMinValue(), value, prop.getMaxValue());
+        prop.setValue(value);
+        valueIndicator.setText(String.valueOf(value));
     }
 
     public boolean pointerPressed(int x, int y) {
@@ -159,10 +158,10 @@ public class Slider extends Container {
             prevDraggedTime = System.currentTimeMillis();
 
             dx = Mathh.constrain(-200, x - prevDraggedX, 200); // prevent int overflow
-            int prevValue = value;
-            setValue((value + dx * dx * dx / dt / w));
+            int prevValue = prop.getValue();
+            setValue((prevValue + dx * dx * dx / dt / w));
 
-            if (value != prevValue) {
+            if (prop.getValue() != prevValue) {
                 // Do not change prevDraggedX on small movements to allow more precise adjustment.
                 // On the next pointerDragged event, dx will be greater
                 prevDraggedX = x;
@@ -181,10 +180,10 @@ public class Slider extends Container {
 
         switch (RootContainer.getAction(keyCode)) {
             case Keys.RIGHT:
-                setValue(value + count * count);
+                setValue(prop.getValue() + count * count);
                 return true;
             case Keys.LEFT:
-                setValue(value - count * count);
+                setValue(prop.getValue() - count * count);
                 return true;
             default:
                 return super.keyPressed(keyCode, count);
@@ -198,10 +197,10 @@ public class Slider extends Container {
 
         switch (RootContainer.getAction(keyCode)) {
             case Keys.RIGHT:
-                setValue(value + pressedCount * pressedCount);
+                setValue(prop.getValue() + pressedCount * pressedCount);
                 return true;
             case Keys.LEFT:
-                setValue(value - pressedCount * pressedCount);
+                setValue(prop.getValue() - pressedCount * pressedCount);
                 return true;
             default:
                 return super.keyRepeated(keyCode, pressedCount);
