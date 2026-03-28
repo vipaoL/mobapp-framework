@@ -209,6 +209,10 @@ public class Grid extends UIComponent implements IContainer {
     }
 
     protected boolean handlePointerReleased(int x, int y) {
+        if (pointerPressedY == -1) {
+            return false;
+        }
+
         int startY = scrollOffset;
         int targetY = scrollOffset;
 
@@ -229,6 +233,8 @@ public class Grid extends UIComponent implements IContainer {
         } else {
             scrollOffset = Mathh.constrain(topLimitY, targetY, bottomLimitY);
         }
+
+        pointerPressedY = -1;
 
         return true;
     }
@@ -266,6 +272,10 @@ public class Grid extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerDragged(int x, int y) {
+        if (pointerPressedY == -1) {
+            return false;
+        }
+
         if (!isVisible) {
             return false;
         }
