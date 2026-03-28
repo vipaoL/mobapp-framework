@@ -16,8 +16,8 @@ public abstract class AbstractPopupPage extends Page {
         this.feedback = parent;
     }
 
-    public void init() {
-        super.init();
+    protected void setPageContentBounds(IUIComponent pageContent, int x0, int y0, int w, int h) {
+        super.setPageContentBounds(pageContent, x0, y0, w, h);
         try {
             if (getUISettings().getTransparencyEnabled()) {
                 setBgImage(((Container) parent).getBlurredCapture());

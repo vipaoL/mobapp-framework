@@ -139,12 +139,14 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return components;
     }
 
-    public void showPopup(IUIComponent w) {
-        w.setParent(this);
-        w.init();
-        popupWindow = w;
+    public void showPopup(IUIComponent component) {
+        component.setParent(this);
+        component.init();
+        popupWindow = component;
         refreshFocusedComponents();
-        popupWindow.setSize(this.w, h).setPos(x0, y0, TOP | LEFT);
+        if (w > 0 && h > 0) {
+            popupWindow.setSize(w, h).setPos(x0, y0, TOP | LEFT);
+        }
         repaint();
     }
 
@@ -690,10 +692,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             return;
         }
 
-        if (popupWindow != null) {
-            popupWindow.setSize(w, h).setPos(x0, y0, LEFT | TOP);
-        }
-
         prevW = this.w;
         prevH = this.h;
         prevX0 = this.x0;
@@ -703,6 +701,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         this.h = h;
         this.x0 = x0;
         this.y0 = y0;
+
+        if (popupWindow != null) {
+            popupWindow.setSize(w, h).setPos(x0, y0, LEFT | TOP);
+        }
 
         onSetBounds(x0, y0, w, h);
     }
