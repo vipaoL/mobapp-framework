@@ -17,10 +17,15 @@ public class Settings {
     private final String storeName;
     private String[] settingsKeysVals;
     private final String[] keys;
+    private boolean autoSaveEnabled = true;
 
     public Settings(String[] keys, String storeName) {
         this.keys = keys;
         this.storeName = "mobapp-settings-" + storeName;
+    }
+
+    public void setAutoSaveEnabled(boolean autoSaveEnabled) {
+        this.autoSaveEnabled = autoSaveEnabled;
     }
 
     public void saveToDisk() {
@@ -88,7 +93,9 @@ public class Settings {
             if (settingsKeysVals[i*2].equals(key)) {
                 if (!settingsKeysVals[i*2 + 1].equals(value)) {
                     settingsKeysVals[i*2 + 1] = value;
-                    saveToDisk();
+                    if (autoSaveEnabled) {
+                        saveToDisk();
+                    }
                 }
                 return true;
             }
