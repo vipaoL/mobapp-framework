@@ -19,7 +19,6 @@ public class Grid extends UIComponent implements IContainer {
     public IUIComponent[] elements = null;
     private int cols = 1;
     protected int bgColor = COLOR_TRANSPARENT;
-    protected int elementsBgColor = NOT_SET;
     protected int elementsPadding = 0;
 
     protected int selected = 0;
@@ -453,8 +452,21 @@ public class Grid extends UIComponent implements IContainer {
             }
 
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            drawBgUnderElement(g, elemX, elemY, elemW, elemH, !forceInactive, drawAsSelected);
+            int overridingBgColor = NOT_SET;
+            int elementNormalBgColor = elements[i].getBgColor();
+            if (forceInactive || drawAsSelected) {
+                if (forceInactive) {
+                    overridingBgColor = BG_COLOR_INACTIVE;
+                } else {
+                    overridingBgColor = COLOR_ACCENT;
+                }
+                elements[i].setBgColor(overridingBgColor);
+            }
+
             elements[i].paint(g, elemX, elemY, elemW, elemH, forceInactive);
+            if (overridingBgColor != NOT_SET) {
+                elements[i].setBgColor(elementNormalBgColor);
+            }
             g.setFont(prevFont);
 
             if (drawAsSelected) {
@@ -474,21 +486,6 @@ public class Grid extends UIComponent implements IContainer {
             int selectionMarkY1 = h * (scrollOffset + h) / getTotalElemsH();
             g.drawLine(x0 + w - 1, y0 + selectionMarkY0, x0 + w - 1, y0 + selectionMarkY1);
         }
-    }
-
-    protected void drawBgUnderElement(Graphics g, int x0, int y0, int w, int h, boolean isActive, boolean isSelected) {
-        if (isActive) {
-            if (isSelected) {
-                g.setColor(COLOR_ACCENT);
-            } else {
-                g.setColor(COLOR_ACCENT_MUTED);
-            }
-        } else {
-            g.setColor(BG_COLOR_INACTIVE);
-        }
-
-        int d = Math.min(w/5, h/5);
-        g.fillRoundRect(x0, y0, w, h, d, d);
     }
 
     private void initAnimationThread() {
@@ -517,7 +514,6 @@ public class Grid extends UIComponent implements IContainer {
         for (int i = 0; i < elements.length; i++) {
             elements[i].setParent(this);
             elements[i].init();
-            elements[i].setBgColor(COLOR_TRANSPARENT);
             if (elements[i] instanceof AbstractButtonSet) {
                 ((AbstractButtonSet) elements[i]).setIsSelectionEnabled(true);
             }
@@ -532,22 +528,6 @@ public class Grid extends UIComponent implements IContainer {
             recalcSize();
         }
 
-        return this;
-    }
-
-    public Grid setElementsBgColor(int color) {
-        if (color == NOT_SET) {
-            return this;
-        }
-
-        this.elementsBgColor = color;
-        if (elements == null) {
-            return this;
-        }
-
-        for (int i = 0; i < elements.length; i++) {
-            elements[i].setBgColor(color);
-        }
         return this;
     }
 
