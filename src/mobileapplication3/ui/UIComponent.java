@@ -210,6 +210,10 @@ public abstract class UIComponent implements IUIComponent {
 
     protected void onSetBounds(int x0, int y0, int w, int h) { }
 
+    public int getBgColor() {
+        return bgColor;
+    }
+
     public IUIComponent setBgColor(int color) {
         bgColor = color;
         return this;

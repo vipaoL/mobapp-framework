@@ -61,6 +61,10 @@ public class ButtonComponent extends AbstractButtonSet {
         return false;
     }
 
+    public int getBgColor() {
+        return buttons[0].getBgColor();
+    }
+
     public IUIComponent setBgColor(int color) {
         buttons[0].setBgColor(color);
         return this;

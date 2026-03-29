@@ -42,6 +42,7 @@ public interface IUIComponent {
     public IUIComponent setVisible(boolean b);
     public IUIComponent setFocused(boolean b);
     public IUIComponent setActive(boolean b);
+    public int getBgColor();
     public IUIComponent setBgColor(int color);
     public IUIComponent setPadding(int padding);
     public IUIComponent roundBg(boolean b);

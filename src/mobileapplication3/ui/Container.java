@@ -56,6 +56,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
     }
 
+    public int getBgColor() {
+        return bgColor;
+    }
+
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
         return this;
