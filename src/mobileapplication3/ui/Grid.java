@@ -551,6 +551,7 @@ public class Grid extends UIComponent implements IContainer {
         return this;
     }
 
+    // TODO rename into margin
     public Grid setElementsPadding(int padding) {
         elementsPadding = padding;
         if (elements == null) {

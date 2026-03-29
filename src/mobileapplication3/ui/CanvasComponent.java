@@ -466,6 +466,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
 
         if (prevW != 0 && prevH != 0 && w != prevW && h != prevH) {
             bg = null;
+            // TODO figure it out
             if (bgColor == COLOR_TRANSPARENT) {
                 bgColor = 0;
             }
