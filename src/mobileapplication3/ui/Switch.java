@@ -2,6 +2,7 @@
 
 package mobileapplication3.ui;
 
+import mobileapplication3.platform.ui.Font;
 import mobileapplication3.platform.ui.Graphics;
 
 public abstract class Switch extends Button {
@@ -11,7 +12,7 @@ public abstract class Switch extends Button {
     }
 
     protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
-        int switchH = font.getHeight();
+        int switchH = Font.getDefaultFontHeight();
         int switchW = switchH * 9 / 5;
 
         int outlineThickness = Math.max(1, switchH / 20);
