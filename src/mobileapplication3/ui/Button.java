@@ -326,6 +326,7 @@ public abstract class Button {
 
         lineBounds = font.getLineBounds(text, w, padding);
         prevGetLineBoundsFont = font;
+        wasKbHintVisible = kbHintVisible;
         return lineBounds;
     }
 
