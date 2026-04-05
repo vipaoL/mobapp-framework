@@ -474,6 +474,20 @@ public class List extends UIComponent implements IContainer {
 
     public List setIsSelectionEnabled(boolean selectionEnabled) {
         this.isSelectionEnabled = selectionEnabled;
+        for (int i = 0; i < elements.length; i++) {
+            if (elements[i] instanceof AbstractButtonSet) {
+                AbstractButtonSet buttonSet = (AbstractButtonSet) elements[i];
+                buttonSet.setIsSelectionEnabled(selectionEnabled);
+            }
+            if (elements[i] instanceof Grid) {
+                Grid grid = (Grid) elements[i];
+                grid.setIsSelectionEnabled(selectionEnabled);
+            }
+            if (elements[i] instanceof List) {
+                List list = (List) elements[i];
+                list.setIsSelectionEnabled(selectionEnabled);
+            }
+        }
         return this;
     }
 
