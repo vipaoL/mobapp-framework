@@ -263,7 +263,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     };
 
     public final boolean pointerReleased(int x, int y) {
-        if (!checkTouchEvent(x, y)) {
+        if (pressedX < 0 || pressedY < 0) {
             return false;
         }
 
@@ -272,11 +272,16 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             popupWindow.pointerReleased(x, y);
             repaint();
             if (isTarget) {
+                pressedX = -1;
+                pressedY = -1;
                 return true;
             }
         }
 
-        return handlePointerReleased(x, y);
+        boolean ret = handlePointerReleased(x, y);
+        pressedX = -1;
+        pressedY = -1;
+        return ret;
     }
 
     protected boolean handlePointerReleased(int x, int y) {
@@ -284,7 +289,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     };
 
     public final boolean pointerDragged(int x, int y) {
-        if (!checkTouchEvent(x, y)) {
+        if (pressedX < 0 || pressedY < 0) {
             return false;
         }
 
