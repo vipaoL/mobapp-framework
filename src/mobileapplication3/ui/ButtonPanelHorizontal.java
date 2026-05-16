@@ -215,7 +215,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         for (int i = 0; i < buttonRows.length; i++) {
             int rowW = 0;
             for (int j = 0; j < buttonRows[i].buttons.length; j++) {
-                rowW += buttonRows[i].buttons[i].getMinPossibleWidth();
+                rowW += buttonRows[i].buttons[j].getMinPossibleWidth();
             }
             ret = Math.max(ret, rowW);
         }
