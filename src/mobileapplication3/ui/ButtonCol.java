@@ -71,7 +71,6 @@ public class ButtonCol extends AbstractButtonSet {
         super.setSize(w, h);
         this.hBeforeTrim = this.h;
         this.btnHBeforeAuto = btnH;
-        this.btnH = btnH;
         this.trimHeight = trimHeight;
 
         if (buttons == null) {
@@ -82,16 +81,17 @@ public class ButtonCol extends AbstractButtonSet {
             this.w = getMinPossibleWidth();
         }
 
-        if (this.btnH == H_AUTO) {
-            this.btnH = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding*2;
+        if (btnH == H_AUTO) {
+            btnH = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding * 2;
             if (this.h != H_AUTO && !this.trimHeight) {
                 if (buttons.length > 0) {
-                    this.btnH = Math.max(this.btnH, this.h / buttons.length);
+                    btnH = Math.max(this.btnH, this.h / buttons.length);
                 }
             }
         } else {
             this.h = Math.min(this.h, getTotalBtnsH() + padding * 2);
         }
+        setBtnH(btnH);
 
         if (this.h == H_AUTO) {
             this.h = getTotalBtnsH() + padding * 2;
@@ -128,8 +128,12 @@ public class ButtonCol extends AbstractButtonSet {
         return res + padding * 2;
     }
 
+    public void setBtnH(int btnH) {
+        this.btnH = btnH;
+    }
+
     public int getBtnH() {
-        return btnH;
+        return Math.max(1, btnH);
     }
 
     public int getTotalBtnsH() {
@@ -174,7 +178,7 @@ public class ButtonCol extends AbstractButtonSet {
         prevSelected = selected;
         x -= x0;
         y -= y0 - scrollOffset;
-        setSelected(y / btnH);
+        setSelected(y / getBtnH());
         boolean wasSelected = (selected == prevSelected && isSelectionEnabled);
 
         return buttons[selected].invokePressed(wasSelected, isFocused);
@@ -221,10 +225,6 @@ public class ButtonCol extends AbstractButtonSet {
             return false;
         }
 
-        if (btnH*buttons.length <= h) {
-            //return false;
-        }
-
         if (!checkTouchEvent(x, y)) {
             pointerPressedY = -1;
             return false;
@@ -258,10 +258,6 @@ public class ButtonCol extends AbstractButtonSet {
             return false;
         }
 
-        if (btnH*buttons.length <= h) {
-            //return false;
-        }
-
         scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
 
         scrollOffset = Math.max(0, Math.min(scrollOffset, getMaxScrollOffset()));
@@ -288,7 +284,7 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     private int getMaxScrollOffset() {
-        return getTotalBtnsH() - (h - padding * 2);
+        return Math.max(0, getTotalBtnsH() - (h - padding * 2));
     }
 
     public boolean onKeyPressed(int keyCode, int count) {
@@ -341,6 +337,7 @@ public class ButtonCol extends AbstractButtonSet {
     }
 
     public AbstractButtonSet setSelected(int selected) {
+        int btnH = getBtnH();
         int selectedY = btnH * selected;
         int startY = scrollOffset;
         int targetY = scrollOffset;
@@ -394,14 +391,15 @@ public class ButtonCol extends AbstractButtonSet {
             return;
         }
 
+        int btnH = getBtnH();
         for (int i = 0; i < buttons.length; i++) {
             int prevFontFace = g.getFontFace();
             int prevFontStyle = g.getFontStyle();
             int prevFontSize = g.getFontSize();
 
-            int btnY = y0 - scrollOffset + i* this.btnH;
+            int btnY = y0 - scrollOffset + i * btnH;
 
-            if (btnY + this.btnH < y0) {
+            if (btnY + btnH < y0) {
                 continue;
             }
 
@@ -410,7 +408,7 @@ public class ButtonCol extends AbstractButtonSet {
             }
 
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            buttons[i].paint(g, x0, btnY, w, this.btnH, x0, btnY, w, this.btnH, drawAsSelected, isFocused, forceInactive, showKbHints);
+            buttons[i].paint(g, x0, btnY, w, btnH, x0, btnY, w, btnH, drawAsSelected, isFocused, forceInactive, showKbHints);
             g.setFont(prevFontFace, prevFontStyle, prevFontSize);
         }
 
