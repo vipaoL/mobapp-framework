@@ -127,6 +127,7 @@ public class TextComponent extends UIComponent {
         if (h == HEIGHT_AUTO) {
             onSetBounds(x0, y0, w, h);
         }
+        repaint();
         return this;
     }
 
