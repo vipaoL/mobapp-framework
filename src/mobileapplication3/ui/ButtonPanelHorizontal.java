@@ -205,8 +205,8 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
 
         for (int i = 0; i < rows; i++) {
             buttonRows[i]
-                        .setSize(this.w, this.btnH)
-                        .setPos(this.x0, this.y0 + this.btnH*i, ButtonRow.TOP | ButtonRow.LEFT);
+                        .setSize(w, this.btnH)
+                        .setPos(x0, y0 + this.btnH*i, ButtonRow.TOP | ButtonRow.LEFT);
         }
     }
 
