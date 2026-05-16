@@ -32,7 +32,7 @@ public class List extends UIComponent implements IContainer {
     private boolean trimHeight = true;
     private int hUntilTrim, prevTotalelemsH;
     private int scrollOffset = 0;
-    protected int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
+    protected int scrollOffsetWhenPressed;
     private boolean startFromBottom = false;
     private boolean enableAnimations = true;
     private boolean isInited = false;
@@ -180,10 +180,6 @@ public class List extends UIComponent implements IContainer {
             return false;
         }
 
-        if (!checkTouchEvent(x, y)) {
-            return false;
-        }
-
         prevSelected = selected;
 
         return elements[selected].pointerClicked(x, y);
@@ -199,13 +195,6 @@ public class List extends UIComponent implements IContainer {
             return false;
         }
 
-        if (!checkTouchEvent(x, y)) {
-            pointerPressedX = pointerPressedY = -1;
-            return false;
-        }
-
-        pointerPressedX = x;
-        pointerPressedY = y;
         scrollOffsetWhenPressed = scrollOffset;
 
         setSelected((y - y0 + scrollOffset) / elemH);
@@ -236,9 +225,13 @@ public class List extends UIComponent implements IContainer {
             return true;
         }
 
+        if (pressedX < 0 || pressedY < 0) {
+            return false;
+        }
+
         int oldScrollOffset = scrollOffset;
 
-        scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
+        scrollOffset = scrollOffsetWhenPressed - (y - pressedY);
 
         scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalElemsH() - h));
 
@@ -250,8 +243,23 @@ public class List extends UIComponent implements IContainer {
     }
 
     public boolean pointerReleased(int x, int y) {
-        draggedEventRecipient = null;
-        return true;
+        if (draggedEventRecipient == this) {
+            draggedEventRecipient = null;
+            return true;
+        }
+
+        if (draggedEventRecipient != null) {
+            draggedEventRecipient.pointerReleased(x, y);
+            draggedEventRecipient = null;
+            return true;
+        }
+
+        if (elements != null && elements.length != 0) {
+            elements[selected].pointerReleased(x, y);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {

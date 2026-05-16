@@ -402,6 +402,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerReleased(int x, int y) {
+        boolean ret = false;
         if (draggedEventRecipient != null) {
             try {
                 draggedEventRecipient.pointerReleased(x, y);
@@ -409,59 +410,37 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 Logger.log(ex);
             }
             draggedEventRecipient = null;
-            return true;
+            ret = true;
         }
-        if (!checkTouchEvent(x, y)) {
-            return false;
-        }
-
-        if (popupWindow != null) {
-            boolean isTarget = popupWindow.checkTouchEvent(x, y);
-            popupWindow.pointerReleased(x, y);
-            if (isTarget) {
-                return true;
-            }
-        }
-
-        IUIComponent[] uiComponents = getComponents();
-
-        try {
-            for (int i = uiComponents.length - 1; i >= 0; i--) {
-                if (uiComponents[i] == null) {
-                    continue;
-                }
-                if (uiComponents[i].pointerReleased(x, y)) {
-                    return true;
-                }
-            }
-        } catch(Exception ex) {
-            Logger.log(ex);
-        }
-
-        return false;
+        pressedX = -1;
+        pressedY = -1;
+        return ret;
     }
 
     public boolean pointerDragged(int x, int y) {
         if (draggedEventRecipient != null) {
             try {
-                draggedEventRecipient.pointerDragged(x, y);
+                return draggedEventRecipient.pointerDragged(x, y);
             } catch (Exception ex) {
                 Logger.log(ex);
             }
-            return true;
         }
+        return false;
+    }
 
+    public boolean pointerPressed(int x, int y) {
+        draggedEventRecipient = null;
         if (!checkTouchEvent(x, y)) {
+            pressedX = -1;
+            pressedY = -1;
             return false;
         }
-
-        if (Math.abs(x - pressedX) + Math.abs(y - pressedY) < 5) {
-            return false;
-        }
+        pressedX = x;
+        pressedY = y;
 
         if (popupWindow != null) {
             boolean isTarget = popupWindow.checkTouchEvent(x, y);
-            popupWindow.pointerDragged(x, y);
+            popupWindow.pointerPressed(x, y);
             if (isTarget) {
                 draggedEventRecipient = popupWindow;
                 return true;
@@ -475,40 +454,8 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 if (uiComponents[i] == null) {
                     continue;
                 }
-                if (uiComponents[i].pointerDragged(x, y)) {
+                if (uiComponents[i].checkTouchEvent(x, y)) {
                     draggedEventRecipient = uiComponents[i];
-                    return true;
-                }
-            }
-        } catch(Exception ex) {
-            Logger.log(ex);
-        }
-        return false;
-    }
-
-    public boolean pointerPressed(int x, int y) {
-        draggedEventRecipient = null;
-        if (!checkTouchEvent(x, y)) {
-            return false;
-        }
-
-        pressedX = x;
-        pressedY = y;
-
-        if (popupWindow != null) {
-            boolean isTarget = popupWindow.checkTouchEvent(x, y);
-            popupWindow.pointerPressed(x, y);
-            if (isTarget) {
-                return true;
-            }
-        }
-
-        IUIComponent[] uiComponents = getComponents();
-
-        try {
-            for (int i = uiComponents.length - 1; i >= 0; i--) {
-                if (uiComponents[i] == null) {
-                    continue;
                 }
                 if (uiComponents[i].pointerPressed(x, y)) {
                     return true;

@@ -15,7 +15,7 @@ public class Slider extends Container {
 
     private int prevDraggedX;
     private long prevDraggedTime = 0;
-    private boolean isDraggedEventRecipient;
+    private boolean isSliderDragged;
 
     public Slider(Property prop) {
         this.prop = prop;
@@ -137,6 +137,7 @@ public class Slider extends Container {
     public boolean pointerPressed(int x, int y) {
         prevDraggedX = x;
         prevDraggedTime = System.currentTimeMillis();
+        isSliderDragged = false;
         return super.pointerPressed(x, y);
     }
 
@@ -145,14 +146,22 @@ public class Slider extends Container {
         int dy = y - pressedY;
         int dt = (int) (System.currentTimeMillis() - prevDraggedTime);
 
-        if (!isDraggedEventRecipient && Math.abs(dx) < Math.abs(dy * 5)) {
-            prevDraggedX = x;
-            // list scrolling handles the pointer event if false is returned
-            // so scroll the list if the vertical movement is greater than the horizontal movement
-            return false;
+        if (!isSliderDragged) {
+            if (!checkTouchEvent(x, y)) {
+                return false;
+            }
+
+            if (Math.abs(dx) < Math.abs(dy * 5)) {
+                prevDraggedX = -1;
+                return false; // give up focus to parent
+            }
         }
 
-        isDraggedEventRecipient = true;
+        isSliderDragged = true;
+
+        if (prevDraggedX < 0) {
+            prevDraggedX = x;
+        }
 
         if (dt != 0) {
             prevDraggedTime = System.currentTimeMillis();
@@ -171,6 +180,12 @@ public class Slider extends Container {
         }
 
         return true;
+    }
+
+    public boolean pointerReleased(int x, int y) {
+        boolean wasDragged = isSliderDragged;
+        isSliderDragged = false;
+        return wasDragged || super.pointerReleased(x, y);
     }
 
     public boolean keyPressed(int keyCode, int count) {

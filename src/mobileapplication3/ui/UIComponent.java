@@ -17,6 +17,7 @@ public abstract class UIComponent implements IUIComponent {
     public int x0, y0, w, h, prevX0, prevY0, prevW, prevH,
             anchorX0, anchorY0,
             anchor = IUIComponent.LEFT | IUIComponent.TOP;
+    protected int pressedX, pressedY;
     private boolean isSizeSet = false;
     protected int bgColor = COLOR_TRANSPARENT;
     private boolean roundBg = true;
@@ -328,6 +329,8 @@ public abstract class UIComponent implements IUIComponent {
     public void onHide() { }
 
     public boolean pointerReleased(int x, int y) {
+        pressedX = -1;
+        pressedY = -1;
         if (!isVisible) {
             return false;
         }
@@ -349,9 +352,13 @@ public abstract class UIComponent implements IUIComponent {
     }
 
     public boolean pointerPressed(int x, int y) {
-        if (!(isVisible && checkTouchEvent(x, y))) {
+        if (!isVisible || !checkTouchEvent(x, y)) {
+            pressedX = -1;
+            pressedY = -1;
             return false;
         }
+        pressedX = x;
+        pressedY = y;
         return handlePointerPressed(x, y);
     }
 
