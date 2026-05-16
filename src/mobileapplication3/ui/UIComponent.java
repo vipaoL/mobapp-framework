@@ -284,6 +284,16 @@ public abstract class UIComponent implements IUIComponent {
         }
     }
 
+    public int getTargetFPS() {
+        return 0;
+    }
+
+    public IUIComponent setTargetFPS(int fps) {
+        return this;
+    }
+
+    public void tick() { }
+
     public void repaint() {
         if (parent != null) {
             parent.repaint();

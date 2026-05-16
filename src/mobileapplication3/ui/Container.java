@@ -169,6 +169,8 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return popupWindow != null;
     }
 
+    public void tick() { }
+
     public void paint(Graphics g) {
         paint(g, false);
     }
@@ -680,6 +682,14 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             }
             return null;
         }
+    }
+
+    public int getTargetFPS() {
+        return 0;
+    }
+
+    public IUIComponent setTargetFPS(int fps) {
+        return this;
     }
 
     public void repaint() {

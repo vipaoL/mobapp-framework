@@ -26,6 +26,7 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     private IUIComponent popupWindow = null;
     protected IContainer parent = null;
     protected boolean repaintOnlyOnFlushGraphics = false;
+    protected int targetFPS = 0;
 
     public void init() { }
 
@@ -97,6 +98,8 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
     public boolean isPopupShown() {
         return popupWindow != null;
     }
+
+    public void tick() { }
 
     public final void paint(Graphics g) {
         paint(g, false);
@@ -505,6 +508,16 @@ public abstract class CanvasComponent implements IContainer, IUIComponent, IPopu
             }
             return null;
         }
+    }
+
+    public int getTargetFPS() {
+        return targetFPS;
+    }
+
+    public IUIComponent setTargetFPS(int fps) {
+        this.targetFPS = fps;
+        repaint();
+        return this;
     }
 
     public final void repaint() {

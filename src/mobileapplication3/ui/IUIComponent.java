@@ -47,7 +47,10 @@ public interface IUIComponent {
     public IUIComponent setPadding(int padding);
     public IUIComponent roundBg(boolean b);
     public boolean isVisible();
+    public int getTargetFPS();
+    public IUIComponent setTargetFPS(int fps);
     public boolean repaintOnlyOnFlushGraphics();
+    public void tick();
     public void paint(Graphics g);
     public void paint(Graphics g, int x0, int y0, int w, int h);
     public void paint(Graphics g, boolean forceInactive);
