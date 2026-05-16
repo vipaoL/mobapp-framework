@@ -30,9 +30,8 @@ public class List extends UIComponent implements IContainer {
 
     private boolean isScrollable = true;
     private boolean trimHeight = true;
-    private int hUntilTrim, prevTotalelemsH;
-    private int scrollOffset = 0;
-    protected int scrollOffsetWhenPressed;
+    private int hUntilTrim, prevTotalElemsH;
+    protected int scrollOffset = 0, scrollOffsetWhenPressed;
     private boolean startFromBottom = false;
     private boolean enableAnimations = true;
     private boolean isInited = false;
@@ -50,7 +49,7 @@ public class List extends UIComponent implements IContainer {
         try {
             ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
             isSelectionVisible = isSelectionVisible || getUISettings().showKbHints();
-        } catch (Exception ex) { }
+        } catch (Exception ignored) { }
 
         isInited = true;
         setElements(elements);
@@ -111,9 +110,9 @@ public class List extends UIComponent implements IContainer {
         }
 
         if (startFromBottom) {
-            int dteh = getTotalElemsH() - prevTotalelemsH;
+            int dteh = getTotalElemsH() - prevTotalElemsH;
             int dh = this.h - prevH;
-            prevTotalelemsH = getTotalElemsH();
+            prevTotalElemsH = getTotalElemsH();
 
             scrollOffset += dteh - dh;
 
@@ -133,7 +132,7 @@ public class List extends UIComponent implements IContainer {
         }
     }
 
-//    public int getMinPossibleWidth() { /////// need fix
+//    public int getMinPossibleWidth() { /////// needs fix
 //        int res = 0;
 //        for (int i = 0; i < elements.length; i++) {
 //            res = elements[i].getMinPossibleWidth();
@@ -172,10 +171,6 @@ public class List extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerClicked(int x, int y) {
-        if (!isVisible) {
-            return false;
-        }
-
         if (elements == null || elements.length == 0) {
             return false;
         }
@@ -187,9 +182,6 @@ public class List extends UIComponent implements IContainer {
 
     public boolean handlePointerPressed(int x, int y) {
         draggedEventRecipient = null;
-        if (!isVisible) {
-            return false;
-        }
 
         if (elements == null || elements.length == 0) {
             return false;
@@ -205,10 +197,6 @@ public class List extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerDragged(int x, int y) {
-        if (!isVisible) {
-            return false;
-        }
-
         if (draggedEventRecipient != null) {
             if (draggedEventRecipient != this) {
                 draggedEventRecipient.pointerDragged(x, y);
@@ -263,10 +251,6 @@ public class List extends UIComponent implements IContainer {
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {
-        if (!isVisible) {
-            return false;
-        }
-
         if (!isSelectionEnabled) {
             return false;
         }
