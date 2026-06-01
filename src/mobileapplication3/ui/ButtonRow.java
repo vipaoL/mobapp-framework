@@ -301,8 +301,8 @@ public class ButtonRow extends AbstractButtonSet {
                 break;
             }
 
-            boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
-            buttons[i].paint(g, btnX, y0, btnW, h, btnX, y0, btnW, h, drawAsSelected, isFocused, forceInactive, showKbHints);
+            boolean drawAsSelected = i == selected && isSelectionEnabled && isSelectionVisible;
+            buttons[i].paint(g, btnX, y0, btnW, h, btnX, y0, btnW, h, drawAsSelected, forceInactive, showKbHints);
         }
     }
 

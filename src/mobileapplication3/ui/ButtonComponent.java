@@ -12,9 +12,20 @@ import mobileapplication3.platform.ui.RootContainer;
  * @author vipaol
  */
 public class ButtonComponent extends AbstractButtonSet {
+    private boolean selectionVisible = false;
 
     public ButtonComponent(Button button) {
         this.buttons = new Button[]{button};
+    }
+
+    public void init() {
+        super.init();
+        setIsSelectionVisible(selectionVisible);
+    }
+
+    public AbstractButtonSet setIsSelectionVisible(boolean isSelectionVisible) {
+        selectionVisible = isSelectionVisible;
+        return super.setIsSelectionVisible(isSelectionVisible);
     }
 
     public int getMinPossibleWidth() {
@@ -36,8 +47,8 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-        boolean drawAsSelected = isSelectionVisible && isFocused;
-        buttons[0].paint(g, x0, y0, w, h, drawAsSelected, isFocused, forceInactive, showKbHints);
+        boolean drawAsSelected = isSelectionEnabled && isSelectionVisible;
+        buttons[0].paint(g, x0, y0, w, h, drawAsSelected, forceInactive, showKbHints);
     }
 
     public boolean handlePointerClicked(int x, int y) {

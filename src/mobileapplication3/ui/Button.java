@@ -192,11 +192,11 @@ public abstract class Button {
         return bindedKeyCodes;
     }
 
-    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive, boolean kbHintVisible) {
-        paint(g, x0, y0, w, h, x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean drawAsInactive, boolean kbHintVisible) {
+        paint(g, x0, y0, w, h, x0, y0, w, h, isSelected, drawAsInactive, kbHintVisible);
     }
 
-    public void paint(Graphics g, int x0, int y0, int w, int h, int clipX, int clipY, int clipW, int clipH, boolean isSelected, boolean isFocused, boolean drawAsInactive, boolean kbHintVisible) {
+    public void paint(Graphics g, int x0, int y0, int w, int h, int clipX, int clipY, int clipW, int clipH, boolean isSelected, boolean drawAsInactive, boolean kbHintVisible) {
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
@@ -226,13 +226,13 @@ public abstract class Button {
         g.setClip(clipX, clipY, clipW, clipH);
 
         drawBg(g, clipX, clipY, clipW, clipH, isSelected, drawAsInactive);
-        drawText(g, getTitle(), x0, y0, w, h, isSelected, isFocused, drawAsInactive, kbHintVisible);
-        drawSelectionMark(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
+        drawText(g, getTitle(), x0, y0, w, h, isSelected, drawAsInactive, kbHintVisible);
+        drawSelectionMark(g, x0, y0, w, h, isSelected, drawAsInactive);
 
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
 
-    protected void drawSelectionMark(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
+    protected void drawSelectionMark(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean forceInactive) {
         if (isSelected) {
             g.setColor(getCurrentFontColor(forceInactive));
             int markY0 = h / 3;
@@ -244,10 +244,10 @@ public abstract class Button {
         }
     }
 
-    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
-        drawText(g, text, x0, y0, w, h, 0, 0, isSelected, isFocused, forceInactive, showKbHints);
+    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean forceInactive, boolean showKbHints) {
+        drawText(g, text, x0, y0, w, h, 0, 0, isSelected, forceInactive, showKbHints);
     }
-    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, int centerOffsetX, int centerOffsetY, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
+    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, int centerOffsetX, int centerOffsetY, boolean isSelected, boolean forceInactive, boolean showKbHints) {
         Font prevFont = g.getFont();
         setFont(Font.getDefaultFontSize());
 

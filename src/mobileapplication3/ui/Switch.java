@@ -11,7 +11,7 @@ public abstract class Switch extends Button {
         super(title);
     }
 
-    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive, boolean showKbHints) {
+    protected void drawText(Graphics g, String text, int x0, int y0, int w, int h, boolean isSelected, boolean forceInactive, boolean showKbHints) {
         int switchH = Font.getDefaultFontHeight();
         int switchW = switchH * 9 / 5;
 
@@ -51,7 +51,7 @@ public abstract class Switch extends Button {
             }
         }
 
-        super.drawText(g, text, textX, textY, textAreaW, textAreaH, textCenterOffset, 0, isSelected, isFocused, forceInactive, showKbHints);
+        super.drawText(g, text, textX, textY, textAreaW, textAreaH, textCenterOffset, 0, isSelected, forceInactive, showKbHints);
 
         int switchColor = isActive() ? fontColor : fontColorInactive;
 
