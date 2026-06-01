@@ -41,14 +41,50 @@ public class KeyboardHelper {
                             break;
                         }
 
-                        try {
-                            // Wait a delay and start repeating. This thread is interrupted when the key is released
-                            Thread.sleep(500);
-                            while (isRunning && Thread.currentThread() == repeatThread && pressState) {
-                                listener.handleKeyRepeated(lastKey, pressCount);
-                                Thread.sleep(150);
+                        // Wait 500 ms before starting to repeat
+                        boolean aborted = false;
+                        synchronized (tillPressed) {
+                            long targetTime = System.currentTimeMillis() + 500;
+                            while (pressState && isRunning) {
+                                long timeLeft = targetTime - System.currentTimeMillis();
+                                if (timeLeft <= 0) {
+                                    break;
+                                }
+                                tillPressed.wait(timeLeft);
                             }
-                        } catch (InterruptedException ignored) { }
+                            if (!pressState || !isRunning) {
+                                aborted = true;
+                            }
+                        }
+
+                        if (aborted) {
+                            continue;
+                        }
+
+                        // Repeat
+                        while (isRunning && Thread.currentThread() == repeatThread) {
+                            synchronized (tillPressed) {
+                                if (!pressState) {
+                                    break;
+                                }
+                            }
+
+                            listener.handleKeyRepeated(lastKey, pressCount);
+
+                            synchronized (tillPressed) {
+                                long targetTime = System.currentTimeMillis() + 150;
+                                while (isRunning && Thread.currentThread() == repeatThread && pressState) {
+                                    long timeLeft = targetTime - System.currentTimeMillis();
+                                    if (timeLeft <= 0) {
+                                        break;
+                                    }
+                                    tillPressed.wait(timeLeft);
+                                }
+                                if (!pressState) {
+                                    break;
+                                }
+                            }
+                        }
                     }
                 } catch (InterruptedException ignored) { }
             }
@@ -57,11 +93,11 @@ public class KeyboardHelper {
     }
 
     public void stop() {
-        isRunning = false;
-        if (repeatThread != null) {
-            Thread t = repeatThread;
+        synchronized (tillPressed) {
             repeatThread = null;
-            t.interrupt();
+            isRunning = false;
+            pressState = false;
+            tillPressed.notifyAll();
         }
     }
 
@@ -77,22 +113,23 @@ public class KeyboardHelper {
 
         synchronized (tillPressed) {
             pressState = true;
-            tillPressed.notify();
+            tillPressed.notifyAll();
         }
         listener.handleKeyPressed(k, pressCount);
     }
 
     public void keyReleased(int k) {
         updateLastEventTime();
-        if (k == lastKey) {
-            pressState = false;
-        } else {
-            pressCount = 0;
+
+        synchronized (tillPressed) {
+            if (k == lastKey) {
+                pressState = false;
+            } else {
+                pressCount = 0;
+            }
+            tillPressed.notifyAll();
         }
 
-        if (repeatThread != null) {
-            repeatThread.interrupt();
-        }
         listener.handleKeyReleased(k, pressCount);
     }
 
