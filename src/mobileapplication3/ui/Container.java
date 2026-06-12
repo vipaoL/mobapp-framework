@@ -619,15 +619,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             return this;
         }
 
-        if (this.w == w && this.h == h) {
-            Logger.log(w + "x" + h + " has not changed (" + getClass().getName() + ")");
-            return this;
-        } else {
-            Logger.log(w + "x" + h + " - new size (" + getClass().getName() + ")");
+        if (this.w != w || this.h != h) {
+            setBounds(x0, y0, w, h);
+            setPos(anchorX0, anchorY0, anchor);
         }
-
-        setBounds(x0, y0, w, h);
-        setPos(anchorX0, anchorY0, anchor);
 
         return this;
     }
