@@ -28,6 +28,7 @@ public class Grid extends UIComponent implements IContainer {
     protected boolean selectedOutOfRange = false;
 
     private AnimationThread animationThread = null;
+    private boolean wasScrolling = false;
     private int elemW;
     private int elemH = H_AUTO;
 
@@ -184,6 +185,11 @@ public class Grid extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerClicked(int x, int y) {
+        if (wasScrolling) {
+            wasScrolling = false;
+            return true;
+        }
+
         if (!isVisible) {
             return false;
         }
@@ -239,6 +245,13 @@ public class Grid extends UIComponent implements IContainer {
     }
 
     public boolean handlePointerPressed(int x, int y) {
+        wasScrolling = false;
+        if (animationThread != null && animationThread.isRunning()) {
+            int physicalSpeed = Math.abs(animationThread.getPixelsPerSecondY());
+            if (physicalSpeed > getScrollSpeedClickCancelThreshold()) {
+                wasScrolling = true;
+            }
+        }
         stopAnimation();
 
         if (!isVisible) {
@@ -503,6 +516,10 @@ public class Grid extends UIComponent implements IContainer {
         if (animationThread != null) {
             animationThread.stop();
         }
+    }
+
+    private int getScrollSpeedClickCancelThreshold() {
+        return Font.getDefaultFontHeight() * 8;
     }
 
     public Grid setElements(IUIComponent[] elements) {

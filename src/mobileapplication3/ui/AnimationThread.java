@@ -15,12 +15,12 @@ public class AnimationThread implements Runnable {
 
     private Thread thread = null;
     private AnimationWorker feedback;
-    private boolean isRunning = false;
+    private volatile boolean isRunning = false;
     private int framesCount;
-    private int frameTime;
+    private volatile int frameTime;
     private int x, y, targetX, targetY;
     private int leftLimitX, rightLimitX, topLimitY, bottomLimitY;
-    private int vX = 0, vY = 0;
+    private volatile int vX = 0, vY = 0;
     private int aX, aY;
 
     public AnimationThread(AnimationWorker feedback) {
@@ -89,6 +89,18 @@ public class AnimationThread implements Runnable {
         if (thread != null) {
             thread.interrupt();
         }
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public int getPixelsPerSecondY() {
+        int currentFrameTime = this.frameTime;
+        if (!isRunning || currentFrameTime <= 0) {
+            return 0;
+        }
+        return vY / currentFrameTime;
     }
 
     public void run() {
