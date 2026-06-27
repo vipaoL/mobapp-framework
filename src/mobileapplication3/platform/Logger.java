@@ -106,7 +106,7 @@ public class Logger {
     }
 
     public static void log(String text) {
-        if (logToStdout) {
+        if (logToStdout || (text != null && text.startsWith(ERR_PREF))) {
             System.out.println(text);
         }
         try {
