@@ -137,10 +137,10 @@ public class Logger {
 
     public static void paint(Graphics g) {
         if (isOnScreenLogEnabled) {
-            Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_SMALL);
-            g.setFont(font);
-            for (int j = 0; j <= onScreenLogOffset; j++) {
-                try {
+            try {
+                Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_SMALL);
+                g.setFont(font);
+                for (int j = 0; j <= onScreenLogOffset; j++) {
                     String str = onScreenLog[j];
                     int offset = 0;
                     if (str != null) {
@@ -152,11 +152,13 @@ public class Logger {
                         }
                         g.drawSubstring(str, offset, str.length() - offset, 0, font.getHeight() * j, Graphics.TOP | Graphics.LEFT);
                     }
-                } catch (NullPointerException ex) {
-                    g.drawString(j + "can't show log:NPE", 0, 0, Graphics.TOP | Graphics.LEFT);
-                } catch (IllegalArgumentException ex) {
-                    g.drawString(j + "can't show log:IAE", 0, 0, Graphics.TOP | Graphics.LEFT);
                 }
+            } catch (NullPointerException ex) {
+                if (g != null) {
+                    g.drawString("can't show log:NPE", 0, 0, Graphics.TOP | Graphics.LEFT);
+                }
+            } catch (IllegalArgumentException ex) {
+                g.drawString("can't show log:IAE", 0, 0, Graphics.TOP | Graphics.LEFT);
             }
         }
     }
