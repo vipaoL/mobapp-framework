@@ -88,26 +88,28 @@ public class Slider extends Container {
         g.fillRoundRect(x0, y0, w, h, roundingD, roundingD);
 
         // slider
-        if (isActive) {
-            g.setColor(COLOR_ACCENT);
-        } else {
-            g.setColor(COLOR_ACCENT_MUTED);
-        }
+        if (sliderFilledW > 0) {
+            if (isActive) {
+                g.setColor(COLOR_ACCENT);
+            } else {
+                g.setColor(COLOR_ACCENT_MUTED);
+            }
 
-        clipX = x0;
-        clipY = y0;
-        clipW = sliderFilledW;
-        clipH = h;
-        clipX2 = clipX + clipW;
-        clipY2 = clipY + clipH;
-        clipX = Math.max(clipX, prevClipX);
-        clipY = Math.max(clipY, prevClipY);
-        clipX2 = Math.min(clipX2, prevClipX + prevClipW);
-        clipY2 = Math.min(clipY2, prevClipY + prevClipH);
-        clipW = Math.max(0, clipX2 - clipX);
-        clipH = Math.max(0, clipY2 - clipY);
-        g.setClip(clipX, clipY, clipW, clipH);
-        g.fillRoundRect(x0, y0, w, h, roundingD, roundingD);
+            clipX = x0;
+            clipY = y0;
+            clipW = sliderFilledW;
+            clipH = h;
+            clipX2 = clipX + clipW;
+            clipY2 = clipY + clipH;
+            clipX = Math.max(clipX, prevClipX);
+            clipY = Math.max(clipY, prevClipY);
+            clipX2 = Math.min(clipX2, prevClipX + prevClipW);
+            clipY2 = Math.min(clipY2, prevClipY + prevClipH);
+            clipW = Math.max(1, clipX2 - clipX);
+            clipH = Math.max(1, clipY2 - clipY);
+            g.setClip(clipX, clipY, clipW, clipH);
+            g.fillRoundRect(x0, y0, w, h, roundingD, roundingD);
+        }
 
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
