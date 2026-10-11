@@ -59,6 +59,10 @@ public class List extends UIComponent implements IContainer {
         setSizes(w, hUntilTrim, elemH, trimHeight);
     }
 
+    public void setElemH(int elemH) {
+        this.elemH = elemH;
+    }
+
     public IUIComponent setSize(int w, int h) {
         return setSizes(w, h, elemH);
     }
