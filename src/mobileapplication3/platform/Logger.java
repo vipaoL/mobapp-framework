@@ -89,6 +89,11 @@ public class Logger {
         logErr(ex.toString());
     }
 
+    public static void log(String message, Throwable ex) {
+        ex.printStackTrace();
+        logErr(message + ": " + ex.toString());
+    }
+
     public static void logErr(String text) {
         log(ERR_PREF + text);
     }
