@@ -18,6 +18,10 @@ public class Mathh {
                     3732, 4010, 4331, 4704, 5144, 5671, 6313, 7115, 8144, 9514, 11430, 14300,
                     19081, 28636, 57289, Integer.MAX_VALUE};
 
+    public static final int FP_SHIFT = 12;
+    private static final int FP_HALF = 1 << (FP_SHIFT - 1); // 2048
+    public static final int FP_ONE = 1 << FP_SHIFT; // 4096
+
     private static int sinus(int t) {
         int k;
         k = t / 10;
@@ -181,5 +185,34 @@ public class Mathh {
             return -1;
         }
         return 0;
+    }
+
+    public static long isqrt(long n) {
+        if (n <= 0) {
+            return 0;
+        }
+        long res = 0;
+        long bit = 1L << 62;
+        while (bit > n) {
+            bit >>= 2;
+        }
+        while (bit != 0) {
+            if (n >= res + bit) {
+                n -= res + bit;
+                res = (res >> 1) + bit;
+            } else {
+                res >>= 1;
+            }
+            bit >>= 2;
+        }
+        return res;
+    }
+
+    public static int toFP(int val) {
+        return val << FP_SHIFT;
+    }
+
+    public static int fpRound(int v) {
+        return (v >= 0) ? (v + FP_HALF) >> FP_SHIFT : (v - FP_HALF) >> FP_SHIFT;
     }
 }
