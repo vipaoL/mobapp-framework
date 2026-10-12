@@ -22,6 +22,9 @@ public interface IGraphics {
 
     void drawLine(int x1, int y1, int x2, int y2, int thickness, int zoomOut, boolean drawThickness, boolean zoomThickness);
 
+
+    void drawPolyline(int[] xPoints, int[] yPoints, int nPoints, int thickness, int zoomOut, boolean drawThickness, boolean zoomThickness, boolean roundCaps);
+
     void drawRect(int x, int y, int width, int height);
 
     void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
